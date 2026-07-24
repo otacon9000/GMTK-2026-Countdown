@@ -110,3 +110,6 @@ InitTestScene*.unity*
 
 # Rider project files
 .idea/
+
+CLAUDE.md
+spec.md
