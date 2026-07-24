@@ -154,6 +154,52 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 40}
   m_SizeDelta: {x: 1000, y: 300}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!1 &165357795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165357797}
+  - component: {fileID: 165357796}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &165357796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165357795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01141b51582e54cac839c4e055008c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskManager
+  taskThresholds: 1e0000003200000046000000
+  thresholdIncrementPastList: 20
+--- !u!4 &165357797
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165357795}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.4343, y: -1.65217, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &378614859
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,6 +485,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &581118156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 581118158}
+  - component: {fileID: 581118157}
+  m_Layer: 0
+  m_Name: DeckManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &581118157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581118156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26eb54687b41f4041afe82f5a1223c36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DeckManager
+  fullDeck:
+  - {fileID: 11400000, guid: 0c04af0beb35841a2a7326ee443a09ea, type: 2}
+  - {fileID: 11400000, guid: 3f565a56aea834187bf78145c1f9bcf7, type: 2}
+  - {fileID: 11400000, guid: b4a54bbbb31dd46bbade4667c4bfeed3, type: 2}
+  - {fileID: 11400000, guid: a494ff88d6f7d46ffaa9cc3d7badc534, type: 2}
+  - {fileID: 11400000, guid: db10b9dcd020f4eaa99ffe6cfc05efaf, type: 2}
+  - {fileID: 11400000, guid: e3229d1d955d74c1e86d85020ab179dc, type: 2}
+  - {fileID: 11400000, guid: 361555052801b4e229af85c7de057fd1, type: 2}
+  - {fileID: 11400000, guid: 485bb4dfe9f5d4bc78a34795b496a90e, type: 2}
+  - {fileID: 11400000, guid: 429b21b767b104334b095324edf10381, type: 2}
+  - {fileID: 11400000, guid: abee87b2aae1e4955a00f5618fc83d6b, type: 2}
+  - {fileID: 11400000, guid: 166fca89efffc42c09e5ae76d4c5c4e0, type: 2}
+  - {fileID: 11400000, guid: 8889ab94d8b6f4204bd529dd5f3aa509, type: 2}
+  - {fileID: 11400000, guid: 489d7c02bb25e442995c4426740c6d0a, type: 2}
+  - {fileID: 11400000, guid: 2786880cf20df44e0ab094757d1d9aa1, type: 2}
+  - {fileID: 11400000, guid: a9c37d2276a0a454b822debdf86a32f3, type: 2}
+  - {fileID: 11400000, guid: bfd423b56d66f42feae1d490bd6cd136, type: 2}
+--- !u!4 &581118158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581118156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.74702, y: -2.17151, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,6 +622,51 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619394800}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &859776576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 859776578}
+  - component: {fileID: 859776577}
+  m_Layer: 0
+  m_Name: CountdownController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &859776577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859776576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddeb800eb81de42559c00675f7fc2a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.CountdownController
+  countdownDuration: 8
+--- !u!4 &859776578
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859776576}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -661,6 +813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1338901894}
   - component: {fileID: 1338901895}
+  - component: {fileID: 1338901896}
   m_Layer: 0
   m_Name: Desk
   m_TagString: Untagged
@@ -742,6 +895,23 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1338901896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338901893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2c84bf5357d04a4ea314a3d2cdb182d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DebugUIController
+  deckManager: {fileID: 581118157}
+  promptText: {fileID: 2073901398}
+  testPromptData: {fileID: 11400000, guid: 66f6b27ab794147569672a8148f4b70f, type: 2}
+  countdownController: {fileID: 859776577}
+  taskManager: {fileID: 165357796}
 --- !u!1 &1357009755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,3 +1287,6 @@ SceneRoots:
   - {fileID: 1569439994}
   - {fileID: 1571847361}
   - {fileID: 557419298}
+  - {fileID: 859776578}
+  - {fileID: 581118158}
+  - {fileID: 165357797}
