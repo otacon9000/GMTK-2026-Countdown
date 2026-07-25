@@ -10,14 +10,17 @@ namespace GmtkCountdown
     public class CountdownController : MonoBehaviour
     {
         [SerializeField] private float countdownDuration = 8f;
+        [SerializeField] private float minimumCountdownDuration = 2f;
 
         private float currentTime;
+        private float currentActiveDuration;
+        private float? nextCountdownDuration;
 
         /// <summary>Seconds remaining in the current countdown.</summary>
         public float TimeRemaining => currentTime;
 
-        /// <summary>Remaining time as a 0-1 fraction of <see cref="countdownDuration"/>.</summary>
-        public float TimeRemainingNormalized => countdownDuration > 0f ? currentTime / countdownDuration : 0f;
+        /// <summary>Remaining time as a 0-1 fraction of the current countdown's starting duration.</summary>
+        public float TimeRemainingNormalized => currentActiveDuration > 0f ? currentTime / currentActiveDuration : 0f;
 
         private void OnEnable()
         {
@@ -29,11 +32,30 @@ namespace GmtkCountdown
             GameManager.OnStateChanged -= HandleStateChanged;
         }
 
+        /// <summary>
+        /// Queues the duration for the next Countdown, based on the effective time value
+        /// earned from the fragment just played. Clamped to <see cref="minimumCountdownDuration"/>.
+        /// </summary>
+        public void SetNextCountdownDuration(float earnedTime)
+        {
+            nextCountdownDuration = Mathf.Max(earnedTime, minimumCountdownDuration);
+        }
+
         private void HandleStateChanged(GameState newState)
         {
             if (newState == GameState.Countdown)
             {
-                currentTime = countdownDuration;
+                if (nextCountdownDuration.HasValue)
+                {
+                    currentActiveDuration = nextCountdownDuration.Value;
+                    nextCountdownDuration = null;
+                }
+                else
+                {
+                    currentActiveDuration = countdownDuration;
+                }
+
+                currentTime = currentActiveDuration;
             }
         }
 

@@ -531,6 +531,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2786880cf20df44e0ab094757d1d9aa1, type: 2}
   - {fileID: 11400000, guid: a9c37d2276a0a454b822debdf86a32f3, type: 2}
   - {fileID: 11400000, guid: bfd423b56d66f42feae1d490bd6cd136, type: 2}
+  - {fileID: 11400000, guid: ed863912a59c2485da68e77a69ea4286, type: 2}
+  - {fileID: 11400000, guid: 47c86555e882b413fa0ddd676eb6fdf2, type: 2}
+  - {fileID: 11400000, guid: 81da7600f3b8d49369036aeba7b73156, type: 2}
+  - {fileID: 11400000, guid: 628ac1fccf3c742768be6d0f6555844f, type: 2}
 --- !u!4 &581118158
 Transform:
   m_ObjectHideFlags: 0
@@ -660,6 +664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.CountdownController
   countdownDuration: 8
+  minimumCountdownDuration: 2
 --- !u!4 &859776578
 Transform:
   m_ObjectHideFlags: 0

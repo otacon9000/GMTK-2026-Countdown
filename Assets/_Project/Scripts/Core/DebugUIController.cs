@@ -19,6 +19,7 @@ namespace GmtkCountdown
         [SerializeField] private TaskManager taskManager;
 
         private List<FragmentData> currentHand = new List<FragmentData>();
+        private int? lastQueuedCountdownDuration;
 
         private void OnEnable()
         {
@@ -91,7 +92,14 @@ namespace GmtkCountdown
             deckManager.RemoveFragment(fragment);
             int effectiveValue = taskManager.PlayFragment(fragment);
 
-            Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility}");
+            if (countdownController != null)
+            {
+                countdownController.SetNextCountdownDuration(effectiveValue);
+            }
+
+            lastQueuedCountdownDuration = effectiveValue;
+
+            Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
 
             taskManager.EvaluateProgress(deckManager);
         }
@@ -103,6 +111,11 @@ namespace GmtkCountdown
             GUILayout.Label($"Fragments remaining in deck: {deckManager.RemainingCount}");
             GUILayout.Label($"Task {taskManager.CurrentTaskIndex + 1} - threshold: {taskManager.CurrentThreshold}");
             GUILayout.Label($"Accumulated credibility: {taskManager.AccumulatedCredibility}");
+
+            if (lastQueuedCountdownDuration.HasValue)
+            {
+                GUILayout.Label($"Next countdown queued: {lastQueuedCountdownDuration.Value}s");
+            }
 
             if (GameManager.Instance.CurrentState == GameState.Countdown && countdownController != null)
             {

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77609db6c9c74487da25d8f8cd39c54f, type: 3}
   m_Name: Fragment_Test12
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.FragmentData
-  fragmentText: Test
+  fragmentText: FAM_ALTO
   category: 2
   credibilityValue: 20
