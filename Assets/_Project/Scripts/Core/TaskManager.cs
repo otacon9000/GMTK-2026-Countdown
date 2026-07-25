@@ -4,44 +4,41 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Owns credibility accumulation, category-repeat penalty, and endless task threshold
-    /// progression. There is no victory condition: tasks continue indefinitely, each one
-    /// harder than the last. The run only ends when the deck runs out of fragments before
-    /// the current task's threshold is reached; currentTaskIndex at that point is the score.
+    /// Owns credibility accumulation, category-repeat penalty, and the current task's
+    /// content-driven threshold. There is no victory condition: tasks continue indefinitely,
+    /// each one selected by the player at a Break screen. The run only ends when the deck
+    /// runs out of fragments before the current task's threshold is reached; TotalScore at
+    /// that point is the score.
     /// </summary>
     public class TaskManager : MonoBehaviour
     {
-        [SerializeField] private List<int> taskThresholds = new List<int> { 50, 70, 90 };
-        [SerializeField] private int thresholdIncrementPastList = 20;
+        [SerializeField] private TaskData firstTaskData;
+        [SerializeField] private List<TaskData> taskPool = new List<TaskData>();
 
-        private int currentTaskIndex;
+        private TaskData currentTaskData;
+        private int tasksCompletedCount;
+        private int totalScore;
         private int accumulatedCredibility;
         private FragmentCategory? lastPlayedCategory;
 
-        /// <summary>Tasks completed so far in this run (0-indexed).</summary>
-        public int CurrentTaskIndex => currentTaskIndex;
+        /// <summary>The task currently being worked on.</summary>
+        public TaskData CurrentTaskData => currentTaskData;
+
+        /// <summary>Tasks completed so far in this run.</summary>
+        public int CurrentTaskIndex => tasksCompletedCount;
+
+        /// <summary>Total score accumulated across all completed tasks this run.</summary>
+        public int TotalScore => totalScore;
 
         /// <summary>Credibility accumulated toward the current task's threshold.</summary>
         public int AccumulatedCredibility => accumulatedCredibility;
 
-        /// <summary>
-        /// Credibility threshold for the current task. Taken directly from
-        /// <see cref="taskThresholds"/> while in bounds; past the list, extends the last
-        /// entry by <see cref="thresholdIncrementPastList"/> per task beyond the list.
-        /// </summary>
-        public int CurrentThreshold
-        {
-            get
-            {
-                if (currentTaskIndex < taskThresholds.Count)
-                {
-                    return taskThresholds[currentTaskIndex];
-                }
+        /// <summary>Credibility threshold for the current task.</summary>
+        public int CurrentThreshold => currentTaskData.RequiredTime;
 
-                int stepsPastList = currentTaskIndex - taskThresholds.Count + 1;
-                int lastThreshold = taskThresholds[taskThresholds.Count - 1];
-                return lastThreshold + stepsPastList * thresholdIncrementPastList;
-            }
+        private void Awake()
+        {
+            currentTaskData = firstTaskData;
         }
 
         /// <summary>
@@ -64,6 +61,35 @@ namespace GmtkCountdown
         }
 
         /// <summary>
+        /// Returns up to <paramref name="count"/> distinct random entries from the task pool.
+        /// If the pool has fewer entries than requested, returns all of them.
+        /// </summary>
+        public List<TaskData> GetTaskChoices(int count)
+        {
+            List<TaskData> shuffled = new List<TaskData>(taskPool);
+            for (int i = shuffled.Count - 1; i > 0; i--)
+            {
+                int swapIndex = Random.Range(0, i + 1);
+                (shuffled[i], shuffled[swapIndex]) = (shuffled[swapIndex], shuffled[i]);
+            }
+
+            int takeCount = Mathf.Min(count, shuffled.Count);
+            return shuffled.GetRange(0, takeCount);
+        }
+
+        /// <summary>
+        /// Sets the chosen task as current, resets progress toward it, and starts the next
+        /// Countdown.
+        /// </summary>
+        public void SelectTask(TaskData chosen)
+        {
+            currentTaskData = chosen;
+            accumulatedCredibility = 0;
+            lastPlayedCategory = null;
+            GameManager.Instance.ChangeState(GameState.Countdown);
+        }
+
+        /// <summary>
         /// Decides whether the current task is complete, the run has ended, or play continues,
         /// and drives the corresponding GameManager state transition. Call once right after
         /// <see cref="PlayFragment"/>.
@@ -72,7 +98,8 @@ namespace GmtkCountdown
         {
             if (accumulatedCredibility >= CurrentThreshold)
             {
-                currentTaskIndex++;
+                totalScore += currentTaskData.ScoreValue;
+                tasksCompletedCount++;
                 accumulatedCredibility = 0;
                 lastPlayedCategory = null;
                 GameManager.Instance.ChangeState(GameState.TaskCompleted);

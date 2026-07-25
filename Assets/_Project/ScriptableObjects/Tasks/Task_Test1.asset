@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77609db6c9c74487da25d8f8cd39c54f, type: 3}
-  m_Name: Fragment_Test17
-  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.FragmentData
-  fragmentText: ABS_BASSA
-  category: 4
-  credibilityValue: 5
+  m_Script: {fileID: 11500000, guid: 0c7c17a2ad3ad405487e778b00911d9f, type: 3}
+  m_Name: Task_Test1
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskData
+  taskName: 'Trova i multipli di due '
+  requiredTime: 40
+  scoreValue: 1

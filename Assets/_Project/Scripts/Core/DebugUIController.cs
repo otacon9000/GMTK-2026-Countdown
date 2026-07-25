@@ -24,8 +24,11 @@ namespace GmtkCountdown
         [SerializeField] private CountdownController countdownController;
         [SerializeField] private TaskManager taskManager;
 
+        private const int TaskChoiceCount = 3;
+
         private readonly List<FragmentData> hand = new List<FragmentData> { null, null, null, null };
         private int? lastQueuedCountdownDuration;
+        private List<TaskData> currentTaskChoices = new List<TaskData>();
 
         // True right before a Countdown state that should get a free full refill:
         // the very first Countdown of a run, and every TaskCompleted -> Countdown bounce.
@@ -79,12 +82,17 @@ namespace GmtkCountdown
                 }
             }
 
-            // TaskCompleted stub: bounce straight back to Countdown, no celebration screen yet.
+            // TaskCompleted stub: bounce straight to the Break task-selection screen.
             if (newState == GameState.TaskCompleted)
             {
-                Debug.Log($"[DebugUIController] Task completed, starting next task (Task {taskManager.CurrentTaskIndex + 1})");
+                Debug.Log($"[DebugUIController] Task completed, moving to Break (Task {taskManager.CurrentTaskIndex + 1})");
                 freeRefillPending = true;
-                GameManager.Instance.ChangeState(GameState.Countdown);
+                GameManager.Instance.ChangeState(GameState.Break);
+            }
+
+            if (newState == GameState.Break)
+            {
+                currentTaskChoices = taskManager.GetTaskChoices(TaskChoiceCount);
             }
         }
 
@@ -99,6 +107,25 @@ namespace GmtkCountdown
                 case GameState.Interruption:
                     HandleInterruptionInput();
                     break;
+
+                case GameState.Break:
+                    HandleBreakInput();
+                    break;
+            }
+        }
+
+        private void HandleBreakInput()
+        {
+            for (int i = 0; i < TaskChoiceCount; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                {
+                    if (i < currentTaskChoices.Count)
+                    {
+                        taskManager.SelectTask(currentTaskChoices[i]);
+                    }
+                    break;
+                }
             }
         }
 
@@ -239,7 +266,7 @@ namespace GmtkCountdown
             GUILayout.BeginArea(new Rect(10, 10, 500, 400));
             GUILayout.Label($"State: {GameManager.Instance.CurrentState}");
             GUILayout.Label($"Fragments remaining in deck: {deckManager.RemainingCount}");
-            GUILayout.Label($"Task {taskManager.CurrentTaskIndex + 1} - threshold: {taskManager.CurrentThreshold}");
+            GUILayout.Label($"Task {taskManager.CurrentTaskIndex + 1}: {taskManager.CurrentTaskData.Name} (threshold: {taskManager.CurrentThreshold})");
             GUILayout.Label($"Accumulated credibility: {taskManager.AccumulatedCredibility}");
 
             if (lastQueuedCountdownDuration.HasValue)
@@ -261,9 +288,22 @@ namespace GmtkCountdown
                 GUILayout.Label($"{i + 1}: {label}");
             }
 
+            if (GameManager.Instance.CurrentState == GameState.Break)
+            {
+                GUILayout.Space(10);
+                GUILayout.Label("Break - choose next task:");
+                for (int i = 0; i < currentTaskChoices.Count; i++)
+                {
+                    TaskData choice = currentTaskChoices[i];
+                    GUILayout.Label($"{i + 1}: {choice.Name} (threshold: {choice.RequiredTime}, score: {choice.ScoreValue})");
+                }
+
+                GUILayout.Label("Break: 1-3 = pick next task");
+            }
+
             if (GameManager.Instance.CurrentState == GameState.GameOver)
             {
-                GUILayout.Label($"GAME OVER - Tasks completed: {taskManager.CurrentTaskIndex}");
+                GUILayout.Label($"GAME OVER - Tasks completed: {taskManager.CurrentTaskIndex} - Total score: {taskManager.TotalScore}");
             }
 
             GUILayout.Space(10);
