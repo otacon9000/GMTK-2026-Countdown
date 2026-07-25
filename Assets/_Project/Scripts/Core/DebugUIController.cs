@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -33,11 +34,30 @@ namespace GmtkCountdown
         private void OnEnable()
         {
             GameManager.OnStateChanged += HandleStateChanged;
+            GameManager.HasPlayableFragment = HasPlayableFragmentInHand;
         }
 
         private void OnDisable()
         {
             GameManager.OnStateChanged -= HandleStateChanged;
+
+            if (GameManager.HasPlayableFragment == (Func<bool>)HasPlayableFragmentInHand)
+            {
+                GameManager.HasPlayableFragment = null;
+            }
+        }
+
+        private bool HasPlayableFragmentInHand()
+        {
+            foreach (FragmentData fragment in hand)
+            {
+                if (fragment != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void HandleStateChanged(GameState newState)
@@ -120,6 +140,21 @@ namespace GmtkCountdown
         {
             if (hand[index] == null)
             {
+                return;
+            }
+
+            int filledSlots = 0;
+            foreach (FragmentData fragment in hand)
+            {
+                if (fragment != null)
+                {
+                    filledSlots++;
+                }
+            }
+
+            if (filledSlots <= 1)
+            {
+                // Discarding the last card in hand would soft-lock the next Interruption; block it.
                 return;
             }
 

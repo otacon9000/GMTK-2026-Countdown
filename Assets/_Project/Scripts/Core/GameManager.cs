@@ -23,6 +23,15 @@ namespace GmtkCountdown
         /// </summary>
         public static event Action<GameState> OnStateChanged;
 
+        /// <summary>
+        /// Optional check invoked whenever a transition into <see cref="GameState.Interruption"/>
+        /// is requested: return true if the player currently has at least one fragment available
+        /// to play. Set by whichever system owns the hand (currently DebugUIController). If null,
+        /// the check is skipped. Redirects to <see cref="GameState.GameOver"/> when it returns false,
+        /// so no caller can trigger an Interruption with nothing to play.
+        /// </summary>
+        public static Func<bool> HasPlayableFragment;
+
         private GameState currentState = GameState.Countdown;
 
         /// <summary>
@@ -55,6 +64,11 @@ namespace GmtkCountdown
         /// <param name="newState">The state to transition into.</param>
         public void ChangeState(GameState newState)
         {
+            if (newState == GameState.Interruption && HasPlayableFragment != null && !HasPlayableFragment())
+            {
+                newState = GameState.GameOver;
+            }
+
             switch (newState)
             {
                 case GameState.Countdown:
