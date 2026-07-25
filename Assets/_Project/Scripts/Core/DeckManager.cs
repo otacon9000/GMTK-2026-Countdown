@@ -26,13 +26,23 @@ namespace GmtkCountdown
         public bool IsEmpty => RemainingCount <= 0;
 
         /// <summary>
-        /// Returns up to <paramref name="handSize"/> random fragments from the pool without
-        /// removing them. The hand is only "on offer" until the player plays a fragment.
+        /// Draws up to <paramref name="count"/> random fragments from the pool, removing each
+        /// one as it's drawn so it can never be drawn again. Returns fewer than <paramref name="count"/>
+        /// (possibly none) if the pool doesn't have enough fragments left.
         /// </summary>
-        public List<FragmentData> DrawHand(int handSize)
+        public List<FragmentData> DrawFragments(int count)
         {
-            int count = Mathf.Min(handSize, availableFragments.Count);
-            return availableFragments.GetRange(0, count);
+            int drawCount = Mathf.Min(count, availableFragments.Count);
+            var drawn = new List<FragmentData>(drawCount);
+
+            for (int i = 0; i < drawCount; i++)
+            {
+                int index = Random.Range(0, availableFragments.Count);
+                drawn.Add(availableFragments[index]);
+                availableFragments.RemoveAt(index);
+            }
+
+            return drawn;
         }
 
         /// <summary>

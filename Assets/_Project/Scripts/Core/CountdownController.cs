@@ -41,6 +41,16 @@ namespace GmtkCountdown
             nextCountdownDuration = Mathf.Max(earnedTime, minimumCountdownDuration);
         }
 
+        /// <summary>
+        /// Spends <paramref name="amount"/> seconds of the current countdown time, e.g. as the
+        /// cost of an in-Countdown-state action like drawing a new fragment. Clamped at 0; does
+        /// not trigger the Interruption transition, which is handled by Update().
+        /// </summary>
+        public void ConsumeTime(float amount)
+        {
+            currentTime = Mathf.Max(0f, currentTime - amount);
+        }
+
         private void HandleStateChanged(GameState newState)
         {
             if (newState == GameState.Countdown)
