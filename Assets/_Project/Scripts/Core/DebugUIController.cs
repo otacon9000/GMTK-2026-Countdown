@@ -23,6 +23,8 @@ namespace GmtkCountdown
         [SerializeField] private PromptData testPromptData;
         [SerializeField] private CountdownController countdownController;
         [SerializeField] private TaskManager taskManager;
+        [SerializeField] private CardSlotUI[] cardSlots;
+        [SerializeField] private RedrawButtonUI redrawButton;
 
         private const int TaskChoiceCount = 3;
 
@@ -112,6 +114,27 @@ namespace GmtkCountdown
                     HandleBreakInput();
                     break;
             }
+
+            RefreshHandUI();
+        }
+
+        private void RefreshHandUI()
+        {
+            if (cardSlots != null)
+            {
+                for (int i = 0; i < cardSlots.Length; i++)
+                {
+                    if (cardSlots[i] != null)
+                    {
+                        cardSlots[i].RefreshDisplay(GetHandSlot(i));
+                    }
+                }
+            }
+
+            if (redrawButton != null)
+            {
+                redrawButton.RefreshVisibility();
+            }
         }
 
         private void HandleBreakInput()
@@ -140,14 +163,14 @@ namespace GmtkCountdown
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 {
-                    DiscardFragment(i);
+                    TryDiscardSlot(i);
                     break;
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                RedrawFragment();
+                TryRedraw();
             }
         }
 
@@ -157,14 +180,19 @@ namespace GmtkCountdown
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 {
-                    PlayFragment(i);
+                    TryPlaySlot(i);
                     break;
                 }
             }
         }
 
-        private void DiscardFragment(int index)
+        public void TryDiscardSlot(int index)
         {
+            if (GameManager.Instance.CurrentState != GameState.Countdown)
+            {
+                return;
+            }
+
             if (hand[index] == null)
             {
                 return;
@@ -189,8 +217,13 @@ namespace GmtkCountdown
             hand[index] = null;
         }
 
-        private void RedrawFragment()
+        public void TryRedraw()
         {
+            if (GameManager.Instance.CurrentState != GameState.Countdown)
+            {
+                return;
+            }
+
             int emptyIndex = hand.FindIndex(fragment => fragment == null);
             if (emptyIndex < 0 || deckManager.IsEmpty)
             {
@@ -209,8 +242,13 @@ namespace GmtkCountdown
             Debug.Log($"[DebugUIController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
         }
 
-        private void PlayFragment(int index)
+        public void TryPlaySlot(int index)
         {
+            if (GameManager.Instance.CurrentState != GameState.Interruption)
+            {
+                return;
+            }
+
             FragmentData fragment = hand[index];
             if (fragment == null)
             {
@@ -230,6 +268,21 @@ namespace GmtkCountdown
             Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
 
             taskManager.EvaluateProgress(deckManager);
+        }
+
+        public bool HasEmptySlot()
+        {
+            return hand.FindIndex(fragment => fragment == null) >= 0;
+        }
+
+        public bool CanRedraw()
+        {
+            return GameManager.Instance.CurrentState == GameState.Countdown && HasEmptySlot() && !deckManager.IsEmpty;
+        }
+
+        public FragmentData GetHandSlot(int index)
+        {
+            return hand[index];
         }
 
         private void RefillHandFree()
