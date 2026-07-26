@@ -25,6 +25,8 @@ namespace GmtkCountdown
         [SerializeField] private TaskManager taskManager;
         [SerializeField] private CardSlotUI[] cardSlots;
         [SerializeField] private RedrawButtonUI redrawButton;
+        [SerializeField] private TaskChoiceButtonUI[] taskChoiceButtons;
+        [SerializeField] private GameObject breakChoicePanel;
 
         private const int TaskChoiceCount = 3;
 
@@ -35,6 +37,14 @@ namespace GmtkCountdown
         // True right before a Countdown state that should get a free full refill:
         // the very first Countdown of a run, and every TaskCompleted -> Countdown bounce.
         private bool freeRefillPending = true;
+
+        private void Start()
+        {
+            if (breakChoicePanel != null)
+            {
+                breakChoicePanel.SetActive(false);
+            }
+        }
 
         private void OnEnable()
         {
@@ -79,6 +89,11 @@ namespace GmtkCountdown
                 {
                     promptText.text = string.Empty;
                 }
+
+                if (breakChoicePanel != null)
+                {
+                    breakChoicePanel.SetActive(false);
+                }
             }
 
             if (newState == GameState.Interruption)
@@ -108,6 +123,22 @@ namespace GmtkCountdown
             if (newState == GameState.Break)
             {
                 currentTaskChoices = taskManager.GetTaskChoices(TaskChoiceCount);
+
+                if (breakChoicePanel != null)
+                {
+                    breakChoicePanel.SetActive(true);
+                }
+
+                if (taskChoiceButtons != null)
+                {
+                    for (int i = 0; i < taskChoiceButtons.Length; i++)
+                    {
+                        if (taskChoiceButtons[i] != null)
+                        {
+                            taskChoiceButtons[i].RefreshDisplay(GetTaskChoice(i));
+                        }
+                    }
+                }
             }
         }
 
@@ -156,10 +187,7 @@ namespace GmtkCountdown
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 {
-                    if (i < currentTaskChoices.Count)
-                    {
-                        taskManager.SelectTask(currentTaskChoices[i]);
-                    }
+                    TrySelectTaskChoice(i);
                     break;
                 }
             }
@@ -281,6 +309,36 @@ namespace GmtkCountdown
             Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
 
             taskManager.EvaluateProgress(deckManager);
+        }
+
+        public void TrySelectTaskChoice(int index)
+        {
+            if (GameManager.Instance.CurrentState != GameState.Break)
+            {
+                return;
+            }
+
+            if (index < 0 || index >= currentTaskChoices.Count)
+            {
+                return;
+            }
+
+            taskManager.SelectTask(currentTaskChoices[index]);
+        }
+
+        public TaskData GetTaskChoice(int index)
+        {
+            if (index < 0 || index >= currentTaskChoices.Count)
+            {
+                return null;
+            }
+
+            return currentTaskChoices[index];
+        }
+
+        public int GetTaskChoiceCount()
+        {
+            return currentTaskChoices.Count;
         }
 
         public bool HasEmptySlot()
