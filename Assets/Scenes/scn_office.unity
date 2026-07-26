@@ -14421,8 +14421,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01141b51582e54cac839c4e055008c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskManager
-  firstTaskData: {fileID: 0}
-  taskPool: []
+  firstTaskData: {fileID: 11400000, guid: 351ef6009c79c439ba2a27adbdabb4a4, type: 2}
+  taskPool:
+  - {fileID: 11400000, guid: 08c77fc5c3da24cb69a867c158d99c10, type: 2}
+  - {fileID: 11400000, guid: 1a272eab411c04ae6bb114a86b5d005d, type: 2}
+  - {fileID: 11400000, guid: da3cf4af7e36a4102ad32399bb89f0d2, type: 2}
+  - {fileID: 11400000, guid: 820eee7a3ed104b7c92252ceda7bb2c0, type: 2}
 --- !u!114 &1956504554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14435,7 +14439,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26eb54687b41f4041afe82f5a1223c36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DeckManager
-  fullDeck: []
+  fullDeck:
+  - {fileID: 11400000, guid: 0c04af0beb35841a2a7326ee443a09ea, type: 2}
+  - {fileID: 11400000, guid: 3f565a56aea834187bf78145c1f9bcf7, type: 2}
+  - {fileID: 11400000, guid: b4a54bbbb31dd46bbade4667c4bfeed3, type: 2}
+  - {fileID: 11400000, guid: a494ff88d6f7d46ffaa9cc3d7badc534, type: 2}
+  - {fileID: 11400000, guid: db10b9dcd020f4eaa99ffe6cfc05efaf, type: 2}
+  - {fileID: 11400000, guid: e3229d1d955d74c1e86d85020ab179dc, type: 2}
+  - {fileID: 11400000, guid: 361555052801b4e229af85c7de057fd1, type: 2}
+  - {fileID: 11400000, guid: 485bb4dfe9f5d4bc78a34795b496a90e, type: 2}
+  - {fileID: 11400000, guid: 429b21b767b104334b095324edf10381, type: 2}
+  - {fileID: 11400000, guid: abee87b2aae1e4955a00f5618fc83d6b, type: 2}
+  - {fileID: 11400000, guid: 166fca89efffc42c09e5ae76d4c5c4e0, type: 2}
+  - {fileID: 11400000, guid: 8889ab94d8b6f4204bd529dd5f3aa509, type: 2}
+  - {fileID: 11400000, guid: 489d7c02bb25e442995c4426740c6d0a, type: 2}
+  - {fileID: 11400000, guid: 2786880cf20df44e0ab094757d1d9aa1, type: 2}
+  - {fileID: 11400000, guid: a9c37d2276a0a454b822debdf86a32f3, type: 2}
+  - {fileID: 11400000, guid: bfd423b56d66f42feae1d490bd6cd136, type: 2}
+  - {fileID: 11400000, guid: ed863912a59c2485da68e77a69ea4286, type: 2}
+  - {fileID: 11400000, guid: 47c86555e882b413fa0ddd676eb6fdf2, type: 2}
+  - {fileID: 11400000, guid: 81da7600f3b8d49369036aeba7b73156, type: 2}
+  - {fileID: 11400000, guid: 628ac1fccf3c742768be6d0f6555844f, type: 2}
 --- !u!114 &1956504555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14462,11 +14486,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2c84bf5357d04a4ea314a3d2cdb182d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DebugUIController
-  deckManager: {fileID: 0}
-  promptText: {fileID: 0}
-  testPromptData: {fileID: 0}
-  countdownController: {fileID: 0}
-  taskManager: {fileID: 0}
+  deckManager: {fileID: 1956504554}
+  promptText: {fileID: 542478815}
+  testPromptData: {fileID: 11400000, guid: 8589ad0c79cd343af970fdaf091cdc0a, type: 2}
+  countdownController: {fileID: 1956504555}
+  taskManager: {fileID: 1956504553}
 --- !u!114 &1956504557
 MonoBehaviour:
   m_ObjectHideFlags: 0
