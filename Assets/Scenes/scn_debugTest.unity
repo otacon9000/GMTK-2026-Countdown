@@ -183,8 +183,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01141b51582e54cac839c4e055008c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskManager
-  taskThresholds: 1e0000003200000046000000
-  thresholdIncrementPastList: 20
+  firstTaskData: {fileID: 11400000, guid: 351ef6009c79c439ba2a27adbdabb4a4, type: 2}
+  taskPool:
+  - {fileID: 11400000, guid: 08c77fc5c3da24cb69a867c158d99c10, type: 2}
+  - {fileID: 11400000, guid: 1a272eab411c04ae6bb114a86b5d005d, type: 2}
+  - {fileID: 11400000, guid: da3cf4af7e36a4102ad32399bb89f0d2, type: 2}
+  - {fileID: 11400000, guid: 820eee7a3ed104b7c92252ceda7bb2c0, type: 2}
 --- !u!4 &165357797
 Transform:
   m_ObjectHideFlags: 0

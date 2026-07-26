@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c31e2d2cb2dfc8845b8fba2dd3b9dc53
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animators/Door.controller
+  uploadId: 955060

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: eaba5ba864c9fc94d88f8a8496bcc72c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animators/Boss.controller
+  uploadId: 955060

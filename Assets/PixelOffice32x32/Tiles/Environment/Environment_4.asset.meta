@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1cab5eefb3f82454cb7f10249127a72d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Tiles/Environment/Environment_4.asset
+  uploadId: 955060

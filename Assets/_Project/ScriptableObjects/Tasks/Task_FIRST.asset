@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7c17a2ad3ad405487e778b00911d9f, type: 3}
   m_Name: Task_FIRST
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskData
-  taskName: 
-  requiredTime: 0
-  scoreValue: 0
+  taskName: FIRST
+  requiredTime: 10
+  scoreValue: 1

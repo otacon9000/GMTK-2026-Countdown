@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6077c436a4c1d184baf0f73b8bdb3fdb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animations/Character02_Walk.anim
+  uploadId: 955060

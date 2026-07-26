@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 56f9c9bb266c29941b109c41083a2965
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Prefabs/Characters/Boss.prefab
+  uploadId: 955060

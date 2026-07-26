@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 069a91a4c117f734eab2ba534fad076e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animations/Door_Closed.anim
+  uploadId: 955060

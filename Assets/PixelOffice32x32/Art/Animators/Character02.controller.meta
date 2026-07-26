@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0761eab130c92e54c812904014ce7e66
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animators/Character02.controller
+  uploadId: 955060

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7c17a2ad3ad405487e778b00911d9f, type: 3}
   m_Name: Task_Test1 1
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskData
-  taskName: 'Trova i multipli di due '
-  requiredTime: 40
-  scoreValue: 1
+  taskName: 'pulire bene gli angoli dello schermo  '
+  requiredTime: 60
+  scoreValue: 100

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6d319a66a9d5deb4fb11bf7a47335696
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 239444
+  packageName: Pixel Office 32x32
+  packageVersion: 1.1.0
+  assetPath: Assets/PixelOffice32x32/Art/Animators/Accountant.controller
+  uploadId: 955060
