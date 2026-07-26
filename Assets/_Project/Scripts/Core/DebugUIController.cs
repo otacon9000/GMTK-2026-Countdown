@@ -27,6 +27,9 @@ namespace GmtkCountdown
         [SerializeField] private RedrawButtonUI redrawButton;
         [SerializeField] private TaskChoiceButtonUI[] taskChoiceButtons;
         [SerializeField] private GameObject breakChoicePanel;
+        [SerializeField] private GameOverPanelUI gameOverPanel;
+        [SerializeField] private GameObject gameOverPanelRoot;
+        [SerializeField] private GameObject[] gameplayUIRoots;
 
         private const int TaskChoiceCount = 3;
 
@@ -43,6 +46,11 @@ namespace GmtkCountdown
             if (breakChoicePanel != null)
             {
                 breakChoicePanel.SetActive(false);
+            }
+
+            if (gameOverPanelRoot != null)
+            {
+                gameOverPanelRoot.SetActive(false);
             }
         }
 
@@ -75,10 +83,43 @@ namespace GmtkCountdown
             return false;
         }
 
+        private void SetGameplayUIRootsActive(bool active)
+        {
+            if (gameplayUIRoots == null)
+            {
+                return;
+            }
+
+            foreach (GameObject root in gameplayUIRoots)
+            {
+                if (root != null)
+                {
+                    root.SetActive(active);
+                }
+            }
+        }
+
         private void HandleStateChanged(GameState newState)
         {
+            if (gameOverPanelRoot != null)
+            {
+                gameOverPanelRoot.SetActive(newState == GameState.GameOver);
+            }
+
+            if (newState == GameState.GameOver)
+            {
+                if (gameOverPanel != null)
+                {
+                    gameOverPanel.RefreshDisplay(taskManager.CurrentTaskIndex, taskManager.TotalScore);
+                }
+
+                SetGameplayUIRootsActive(false);
+            }
+
             if (newState == GameState.Countdown)
             {
+                SetGameplayUIRootsActive(true);
+
                 if (freeRefillPending)
                 {
                     RefillHandFree();
