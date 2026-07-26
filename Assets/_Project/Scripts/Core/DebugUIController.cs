@@ -20,7 +20,7 @@ namespace GmtkCountdown
 
         [SerializeField] private DeckManager deckManager;
         [SerializeField] private TMP_Text promptText;
-        [SerializeField] private PromptData testPromptData;
+        [SerializeField] private List<PromptData> promptPool;
         [SerializeField] private CountdownController countdownController;
         [SerializeField] private TaskManager taskManager;
         [SerializeField] private CardSlotUI[] cardSlots;
@@ -74,13 +74,26 @@ namespace GmtkCountdown
                     RefillHandFree();
                     freeRefillPending = false;
                 }
+
+                if (promptText != null)
+                {
+                    promptText.text = string.Empty;
+                }
             }
 
             if (newState == GameState.Interruption)
             {
-                if (promptText != null && testPromptData != null)
+                if (promptText != null)
                 {
-                    promptText.text = testPromptData.PromptText;
+                    if (promptPool == null || promptPool.Count == 0)
+                    {
+                        Debug.LogWarning("[DebugUIController] Prompt pool is empty, skipping prompt text update");
+                    }
+                    else
+                    {
+                        PromptData chosenPrompt = promptPool[UnityEngine.Random.Range(0, promptPool.Count)];
+                        promptText.text = chosenPrompt.BuildSentence("_____");
+                    }
                 }
             }
 

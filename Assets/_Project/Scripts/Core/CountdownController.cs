@@ -9,7 +9,7 @@ namespace GmtkCountdown
     /// </summary>
     public class CountdownController : MonoBehaviour
     {
-        [SerializeField] private float countdownDuration = 8f;
+        [SerializeField] private float countdownDuration = 4f;
         [SerializeField] private float minimumCountdownDuration = 2f;
 
         private float currentTime;
@@ -21,6 +21,9 @@ namespace GmtkCountdown
 
         /// <summary>Remaining time as a 0-1 fraction of the current countdown's starting duration.</summary>
         public float TimeRemainingNormalized => currentActiveDuration > 0f ? currentTime / currentActiveDuration : 0f;
+
+        /// <summary>The starting duration (seconds) of the current/most recent Countdown round.</summary>
+        public float CurrentActiveDuration => currentActiveDuration;
 
         private void OnEnable()
         {

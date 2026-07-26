@@ -2636,13 +2636,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2909,7 +2909,7 @@ MonoBehaviour:
   slotIndex: 1
   labelText: {fileID: 94678589}
   controller: {fileID: 1956504556}
-  borderImage: {fileID: 0}
+  borderImage: {fileID: 125061473}
 --- !u!114 &125061473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2965,8 +2965,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -111, y: 0}
-  m_SizeDelta: {x: 180, y: 150}
+  m_AnchoredPosition: {x: -200, y: 0}
+  m_SizeDelta: {x: 350, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &137162882
 GameObject:
@@ -5907,6 +5907,33 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &407838402 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 164023433459740471, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
+  m_PrefabInstance: {fileID: 958518309}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &407838403 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6034192633050494835, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
+  m_PrefabInstance: {fileID: 958518309}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &407838406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407838402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be344bdea350a403d8ff1a007e5018ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.BossMover
+  pointA: {fileID: 2135058082}
+  pointB: {fileID: 1533682857}
+  countdownController: {fileID: 1956504555}
+  animator: {fileID: 407838403}
+  distancePerSecond: 1.5
 --- !u!1 &434203481
 GameObject:
   m_ObjectHideFlags: 0
@@ -6487,7 +6514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 108, y: -412}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542478815
@@ -6513,14 +6540,14 @@ MonoBehaviour:
   m_text: Prompt placeholder text goes here
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278569026
+  m_fontColor: {r: 0.25875455, g: 0.7830189, b: 0.018467424, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6537,13 +6564,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -9026,7 +9053,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1992458776819613184, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.21
+      value: -10.36
       objectReference: {fileID: 0}
     - target: {fileID: 1992458776819613184, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9070,12 +9097,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779330744552014871, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 164023433459740471, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 407838406}
   m_SourcePrefab: {fileID: 100100000, guid: 73668abd89bae244fa57781d5d40a33b, type: 3}
 --- !u!1 &972801849
 GameObject:
@@ -9566,7 +9596,7 @@ MonoBehaviour:
   slotIndex: 3
   labelText: {fileID: 1351819388}
   controller: {fileID: 1956504556}
-  borderImage: {fileID: 0}
+  borderImage: {fileID: 1058645775}
 --- !u!114 &1058645775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9622,8 +9652,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 328, y: 0}
-  m_SizeDelta: {x: 180, y: 150}
+  m_AnchoredPosition: {x: 600, y: 0}
+  m_SizeDelta: {x: 350, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1070646516
 GameObject:
@@ -10073,13 +10103,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -10685,8 +10715,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -326, y: 0}
-  m_SizeDelta: {x: 180, y: 150}
+  m_AnchoredPosition: {x: -600, y: 0}
+  m_SizeDelta: {x: 350, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1245065763
 MonoBehaviour:
@@ -10703,7 +10733,7 @@ MonoBehaviour:
   slotIndex: 0
   labelText: {fileID: 1110050412}
   controller: {fileID: 1956504556}
-  borderImage: {fileID: 0}
+  borderImage: {fileID: 1245065764}
 --- !u!114 &1245065764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11651,13 +11681,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -11788,13 +11818,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -13146,6 +13176,37 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1533682856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1533682857}
+  m_Layer: 0
+  m_Name: PointB
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1533682857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533682856}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.02, y: 3.08, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1564371360
 GameObject:
   m_ObjectHideFlags: 0
@@ -15680,12 +15741,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01141b51582e54cac839c4e055008c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.TaskManager
-  firstTaskData: {fileID: 11400000, guid: 351ef6009c79c439ba2a27adbdabb4a4, type: 2}
+  firstTaskData: {fileID: 11400000, guid: 19672307e3bd04986b09b597e4b2417e, type: 2}
   taskPool:
-  - {fileID: 11400000, guid: 08c77fc5c3da24cb69a867c158d99c10, type: 2}
-  - {fileID: 11400000, guid: 1a272eab411c04ae6bb114a86b5d005d, type: 2}
-  - {fileID: 11400000, guid: da3cf4af7e36a4102ad32399bb89f0d2, type: 2}
-  - {fileID: 11400000, guid: 820eee7a3ed104b7c92252ceda7bb2c0, type: 2}
+  - {fileID: 11400000, guid: 51b1605f285c64b868ed4e6a82960832, type: 2}
+  - {fileID: 11400000, guid: a3dff7cb2c0fa48aba0c7edc0f1d3c65, type: 2}
+  - {fileID: 11400000, guid: 02f49dbf1a50244b8975bc55eb7b2edb, type: 2}
+  - {fileID: 11400000, guid: 19672307e3bd04986b09b597e4b2417e, type: 2}
+  - {fileID: 11400000, guid: e572b5b7939fa441ba2c18e2c4f8c370, type: 2}
+  - {fileID: 11400000, guid: 3da45a12c2ffe450890b79b21b8e831f, type: 2}
+  - {fileID: 11400000, guid: c878ee090ccf04268af46c77a99d6f29, type: 2}
+  - {fileID: 11400000, guid: b5bcb8a9175ae4637a0e9b389ccbab6f, type: 2}
+  - {fileID: 11400000, guid: fccedbec5440d4b66843318fbf3724ae, type: 2}
+  - {fileID: 11400000, guid: 8368df15a8de8404799f12880106057b, type: 2}
+  - {fileID: 11400000, guid: 9921426c354af4dddb7308ad44d16434, type: 2}
+  - {fileID: 11400000, guid: 22e9929d51667458094db86b89c2e268, type: 2}
+  - {fileID: 11400000, guid: f7c08b7b2cb334d5eace96b8b3380723, type: 2}
+  - {fileID: 11400000, guid: 33fb1563b8ad8492da2a593389255fa4, type: 2}
+  - {fileID: 11400000, guid: c63a98144a9cc47c887bf7d861ba6a7b, type: 2}
+  - {fileID: 11400000, guid: 7acb786b6c80c49a0957ebb2a194163c, type: 2}
+  - {fileID: 11400000, guid: e1de36057b30345db9e1de114e17f397, type: 2}
+  - {fileID: 11400000, guid: bed832b7750d743a4bc8ca1e163ac427, type: 2}
+  - {fileID: 11400000, guid: 98616645d947749779a3a37081112f67, type: 2}
+  - {fileID: 11400000, guid: 723241bb2a8794abd970bc09ca734600, type: 2}
 --- !u!114 &1956504554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15699,26 +15776,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DeckManager
   fullDeck:
-  - {fileID: 11400000, guid: 0c04af0beb35841a2a7326ee443a09ea, type: 2}
-  - {fileID: 11400000, guid: 3f565a56aea834187bf78145c1f9bcf7, type: 2}
-  - {fileID: 11400000, guid: b4a54bbbb31dd46bbade4667c4bfeed3, type: 2}
-  - {fileID: 11400000, guid: a494ff88d6f7d46ffaa9cc3d7badc534, type: 2}
-  - {fileID: 11400000, guid: db10b9dcd020f4eaa99ffe6cfc05efaf, type: 2}
-  - {fileID: 11400000, guid: e3229d1d955d74c1e86d85020ab179dc, type: 2}
-  - {fileID: 11400000, guid: 361555052801b4e229af85c7de057fd1, type: 2}
-  - {fileID: 11400000, guid: 485bb4dfe9f5d4bc78a34795b496a90e, type: 2}
-  - {fileID: 11400000, guid: 429b21b767b104334b095324edf10381, type: 2}
-  - {fileID: 11400000, guid: abee87b2aae1e4955a00f5618fc83d6b, type: 2}
-  - {fileID: 11400000, guid: 166fca89efffc42c09e5ae76d4c5c4e0, type: 2}
-  - {fileID: 11400000, guid: 8889ab94d8b6f4204bd529dd5f3aa509, type: 2}
-  - {fileID: 11400000, guid: 489d7c02bb25e442995c4426740c6d0a, type: 2}
-  - {fileID: 11400000, guid: 2786880cf20df44e0ab094757d1d9aa1, type: 2}
-  - {fileID: 11400000, guid: a9c37d2276a0a454b822debdf86a32f3, type: 2}
-  - {fileID: 11400000, guid: bfd423b56d66f42feae1d490bd6cd136, type: 2}
-  - {fileID: 11400000, guid: ed863912a59c2485da68e77a69ea4286, type: 2}
-  - {fileID: 11400000, guid: 47c86555e882b413fa0ddd676eb6fdf2, type: 2}
-  - {fileID: 11400000, guid: 81da7600f3b8d49369036aeba7b73156, type: 2}
-  - {fileID: 11400000, guid: 628ac1fccf3c742768be6d0f6555844f, type: 2}
+  - {fileID: 11400000, guid: 464da98c9003447449b0084a495c301c, type: 2}
+  - {fileID: 11400000, guid: c3d5d9fc137b04162a9dfc4135d76dee, type: 2}
+  - {fileID: 11400000, guid: eef9476353052464fba278ceba3f3e9f, type: 2}
+  - {fileID: 11400000, guid: adf2d7adaf36b401e96457809ab42516, type: 2}
+  - {fileID: 11400000, guid: e9434cee5f6c54c3583266a60689abfa, type: 2}
+  - {fileID: 11400000, guid: 6b8aeaf75b82346aea3605a6881dcac2, type: 2}
+  - {fileID: 11400000, guid: fe4525687e4f1432d9a7d7bef124259e, type: 2}
+  - {fileID: 11400000, guid: 97a28ffb259644832b882c855acb97f0, type: 2}
+  - {fileID: 11400000, guid: ea832652b5e0c4f868c7307bd6d98d71, type: 2}
+  - {fileID: 11400000, guid: 34758e26abfbd42468146f46055a60ab, type: 2}
+  - {fileID: 11400000, guid: b3bacff2fb02742059345f17ec658a95, type: 2}
+  - {fileID: 11400000, guid: 6481d2865147044aa9b9e86293517d9a, type: 2}
+  - {fileID: 11400000, guid: 2c6c4824128c44ba0aecb7d6f2fed620, type: 2}
+  - {fileID: 11400000, guid: aeb7e7fb474804d41aba7f2aeb520372, type: 2}
+  - {fileID: 11400000, guid: ee50382d3f31e40ee9a7e90e5466e91b, type: 2}
+  - {fileID: 11400000, guid: 88bf781d72f2b4bd089370ded2988e95, type: 2}
+  - {fileID: 11400000, guid: 078fd61a3dbe34efda102a6ee1e0213e, type: 2}
+  - {fileID: 11400000, guid: 345eaf3c70d6743c0be88af19a1be644, type: 2}
+  - {fileID: 11400000, guid: e498326107ff2432189845549e9a1bca, type: 2}
+  - {fileID: 11400000, guid: 532c22a08989740d6ace7ffcfb625e90, type: 2}
+  - {fileID: 11400000, guid: b86f4a247a966421b8353de0c92ffb29, type: 2}
+  - {fileID: 11400000, guid: 0c324f089d00441438050ce84235b840, type: 2}
+  - {fileID: 11400000, guid: 801bcc67f658c478aab6e1653c818d5a, type: 2}
+  - {fileID: 11400000, guid: 66113e677a84a422b8392598278ad40d, type: 2}
+  - {fileID: 11400000, guid: f3a2ce2e4f4d74862a4318a5599b30f6, type: 2}
+  - {fileID: 11400000, guid: 3485935219c9b42edaaff427b5d50b39, type: 2}
+  - {fileID: 11400000, guid: c26897abd58cd45b68589f7fde8badb9, type: 2}
+  - {fileID: 11400000, guid: 136bf1b898cd44feab2edfdd6bc1dce0, type: 2}
+  - {fileID: 11400000, guid: 6c75adf9c9fff45d0a0dfa6a6ad92172, type: 2}
+  - {fileID: 11400000, guid: be2cc2db228de43aaa3babbc1a7f78d9, type: 2}
+  - {fileID: 11400000, guid: 723edd8fe73094d069cee63247c0d9b5, type: 2}
+  - {fileID: 11400000, guid: 6d40d4ad645fb4a62a777f4511ba4e9f, type: 2}
+  - {fileID: 11400000, guid: db33c63f4e0db42faa889ca56c80dc60, type: 2}
+  - {fileID: 11400000, guid: e49d5d63b066d49cf920de1bb26b56b9, type: 2}
+  - {fileID: 11400000, guid: 92fc08b752e004854a22f157c1cd4925, type: 2}
+  - {fileID: 11400000, guid: 7d469acf6a74d44ec83b98cfe8a02bf6, type: 2}
+  - {fileID: 11400000, guid: 10c12d44c72b14b79acd06c3b512bfce, type: 2}
+  - {fileID: 11400000, guid: 22b1c79ef7b9f4e4caad40ad298efad7, type: 2}
+  - {fileID: 11400000, guid: b4ddeb11bfc9f46288b6725427c06384, type: 2}
+  - {fileID: 11400000, guid: 0a36034eb22ac4159a3f87834f920ea8, type: 2}
 --- !u!114 &1956504555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15747,7 +15844,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.DebugUIController
   deckManager: {fileID: 1956504554}
   promptText: {fileID: 542478815}
-  testPromptData: {fileID: 11400000, guid: 8589ad0c79cd343af970fdaf091cdc0a, type: 2}
+  promptPool:
+  - {fileID: 11400000, guid: 6f757a36767d14b47b5164c37120494d, type: 2}
+  - {fileID: 11400000, guid: 27ededb5058fc4141a4e9f582952026f, type: 2}
+  - {fileID: 11400000, guid: de41989ef852c402d88af52290389e3d, type: 2}
+  - {fileID: 11400000, guid: 8a5cda38b714247ddb168a68b382fa21, type: 2}
+  - {fileID: 11400000, guid: 4a44b7b282537415f9e423c40da0ea91, type: 2}
+  - {fileID: 11400000, guid: 54943519c47884d86ab8e40f73dc3af5, type: 2}
+  - {fileID: 11400000, guid: edecf98cd8f314ef69e2429873441160, type: 2}
+  - {fileID: 11400000, guid: 05700edc28e484a4985ab706bc055888, type: 2}
+  - {fileID: 11400000, guid: aee9a89a6927143878e2742fd33cd7fe, type: 2}
+  - {fileID: 11400000, guid: b079c24871626457eb5f923f4a1a7c43, type: 2}
+  - {fileID: 11400000, guid: 9c81785d0329a4da194fd95328af0587, type: 2}
+  - {fileID: 11400000, guid: 96465fa590a2b4f679ba43e5bdfc8f17, type: 2}
+  - {fileID: 11400000, guid: 05009ee28755d497b95f5292e0c9432e, type: 2}
+  - {fileID: 11400000, guid: 3546717773ee84c598ec665efb475f84, type: 2}
+  - {fileID: 11400000, guid: 9e9420b39aa224565b5edb87241e303d, type: 2}
+  - {fileID: 11400000, guid: 16a4cd50c070e42fd9b98a72278e40f5, type: 2}
+  - {fileID: 11400000, guid: 8d50e53e6d9164151aab98807f2af85b, type: 2}
+  - {fileID: 11400000, guid: 8778625fa9f6d42bdbb75822daa096de, type: 2}
+  - {fileID: 11400000, guid: 0d4b242b18db248a98184b33cba57a2b, type: 2}
+  - {fileID: 11400000, guid: fa412507a8188428bb13d65d2234b505, type: 2}
   countdownController: {fileID: 1956504555}
   taskManager: {fileID: 1956504553}
   cardSlots:
@@ -16062,7 +16179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: thinking of new excuses
+  m_text: Cook up a new excuse
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16095,7 +16212,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 2
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -16176,7 +16293,7 @@ MonoBehaviour:
   slotIndex: 2
   labelText: {fileID: 1338856762}
   controller: {fileID: 1956504556}
-  borderImage: {fileID: 0}
+  borderImage: {fileID: 2004307474}
 --- !u!114 &2004307474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16232,8 +16349,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 112, y: 0}
-  m_SizeDelta: {x: 180, y: 150}
+  m_AnchoredPosition: {x: 200, y: 0}
+  m_SizeDelta: {x: 350, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2012136727
 GameObject:
@@ -17414,6 +17531,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4009535786379671526, guid: 2009885624740dd4ba9584ccc6e7b833, type: 3}
   m_PrefabInstance: {fileID: 886459569}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2135058081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2135058082}
+  m_Layer: 0
+  m_Name: PointA
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2135058082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135058081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.53, y: 3.08, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -17427,3 +17575,5 @@ SceneRoots:
   - {fileID: 1956504558}
   - {fileID: 1381917358}
   - {fileID: 1181875988}
+  - {fileID: 1533682857}
+  - {fileID: 2135058082}
