@@ -30,6 +30,8 @@ namespace GmtkCountdown
         [SerializeField] private GameOverPanelUI gameOverPanel;
         [SerializeField] private GameObject gameOverPanelRoot;
         [SerializeField] private GameObject[] gameplayUIRoots;
+        [SerializeField] private GameObject cardHandAreaRoot;
+        [SerializeField] private GameObject promptAreaRoot;
 
         private const int TaskChoiceCount = 3;
 
@@ -51,6 +53,11 @@ namespace GmtkCountdown
             if (gameOverPanelRoot != null)
             {
                 gameOverPanelRoot.SetActive(false);
+            }
+
+            if (promptAreaRoot != null)
+            {
+                promptAreaRoot.SetActive(false);
             }
         }
 
@@ -101,6 +108,18 @@ namespace GmtkCountdown
 
         private void HandleStateChanged(GameState newState)
         {
+            if (promptAreaRoot != null)
+            {
+                if (newState == GameState.Interruption)
+                {
+                    promptAreaRoot.SetActive(true);
+                }
+                else
+                {
+                    promptAreaRoot.SetActive(false);
+                }
+            }
+
             if (gameOverPanelRoot != null)
             {
                 gameOverPanelRoot.SetActive(newState == GameState.GameOver);
@@ -139,6 +158,11 @@ namespace GmtkCountdown
 
             if (newState == GameState.Interruption)
             {
+                if (cardHandAreaRoot != null)
+                {
+                    cardHandAreaRoot.SetActive(true);
+                }
+
                 if (promptText != null)
                 {
                     if (promptPool == null || promptPool.Count == 0)
@@ -236,7 +260,7 @@ namespace GmtkCountdown
 
         private void HandleCountdownInput()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.K))
             {
                 GameManager.Instance.ChangeState(GameState.Interruption);
             }
@@ -428,6 +452,8 @@ namespace GmtkCountdown
 
         private void OnGUI()
         {
+            return;
+#pragma warning disable CS0162
             GUILayout.BeginArea(new Rect(10, 10, 500, 400));
             GUILayout.Label($"State: {GameManager.Instance.CurrentState}");
             GUILayout.Label($"Fragments remaining in deck: {deckManager.RemainingCount}");
@@ -472,9 +498,10 @@ namespace GmtkCountdown
             }
 
             GUILayout.Space(10);
-            GUILayout.Label("SPACE = trigger interruption (Countdown only)");
+            GUILayout.Label("K = trigger interruption (Countdown only)");
             GUILayout.Label("Countdown: 1-4 discard | R = redraw (-3s) | Interruption: 1-4 = play fragment");
             GUILayout.EndArea();
+#pragma warning restore CS0162
         }
     }
 }

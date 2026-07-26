@@ -14,6 +14,7 @@ namespace GmtkCountdown
     {
         [SerializeField] private TaskData firstTaskData;
         [SerializeField] private List<TaskData> taskPool = new List<TaskData>();
+        [SerializeField] private int maxEarnedTime = 12;
 
         private TaskData currentTaskData;
         private int tasksCompletedCount;
@@ -53,6 +54,8 @@ namespace GmtkCountdown
             {
                 effectiveValue /= 2;
             }
+
+            effectiveValue = Mathf.Min(effectiveValue, maxEarnedTime);
 
             accumulatedCredibility += effectiveValue;
             lastPlayedCategory = fragment.Category;

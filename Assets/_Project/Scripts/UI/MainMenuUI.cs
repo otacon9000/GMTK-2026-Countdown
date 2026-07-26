@@ -19,6 +19,12 @@ namespace GmtkCountdown
         {
             Time.timeScale = 0f;
 
+            if (menuPanelRoot != null)
+            {
+                menuPanelRoot.SetActive(true);
+                menuPanelRoot.transform.SetAsLastSibling();
+            }
+
             if (menuAnimator != null)
             {
                 // Menu animations must keep playing while gameplay is frozen.
