@@ -8,7 +8,6 @@ namespace GmtkCountdown
     {
         Countdown,
         Interruption,
-        ComboResolution,
         TaskCompleted,
         GameOver,
         Break

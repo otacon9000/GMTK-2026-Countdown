@@ -59,7 +59,8 @@ namespace GmtkCountdown
 
         /// <summary>
         /// Transitions the game to <paramref name="newState"/>, updates the current state and
-        /// notifies subscribers. Keep this a flat switch: no per-state Enter/Exit methods for now.
+        /// notifies subscribers. There is deliberately no per-state logic here: everything that
+        /// has to happen on a given state belongs in a subscriber to <see cref="OnStateChanged"/>.
         /// </summary>
         /// <param name="newState">The state to transition into.</param>
         public void ChangeState(GameState newState)
@@ -67,22 +68,6 @@ namespace GmtkCountdown
             if (newState == GameState.Interruption && HasPlayableFragment != null && !HasPlayableFragment())
             {
                 newState = GameState.GameOver;
-            }
-
-            switch (newState)
-            {
-                case GameState.Countdown:
-                    break;
-                case GameState.Interruption:
-                    break;
-                case GameState.ComboResolution:
-                    break;
-                case GameState.TaskCompleted:
-                    break;
-                case GameState.GameOver:
-                    break;
-                case GameState.Break:
-                    break;
             }
 
             currentState = newState;

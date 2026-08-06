@@ -6,12 +6,14 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Throwaway debug harness to manually drive the Countdown -> Interruption ->
-    /// ComboResolution loop before real Countdown timer and card-prefab UI exist.
-    /// Hand is persistent across a task: fragments are drawn one at a time via
-    /// DeckManager.DrawFragments and stay in the hand until discarded or played.
-    /// Input and rendering here are intentionally OnGUI/keyboard only; replace this
-    /// entirely once real UI is ready.
+    /// Main gameplay controller, despite the name: it owns the player's hand, drives the
+    /// Countdown -> Interruption -> Break loop in response to <see cref="GameManager.OnStateChanged"/>,
+    /// and toggles the gameplay UI groups. The hand is persistent across a task — fragments stay
+    /// in it until discarded or played, and are refilled for free only at the start of a run and
+    /// after each completed task; any other refill costs countdown time via TryRedraw.
+    /// Both mouse (through CardSlotUI / RedrawButtonUI / TaskChoiceButtonUI) and keyboard drive
+    /// the same public Try* methods, which are the entry points for every player action.
+    /// The "Debug" in the name is a leftover from the jam; a rename is pending.
     /// </summary>
     public class DebugUIController : MonoBehaviour
     {

@@ -4,9 +4,11 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Manages a single-use pool of excuse fragments for a run: fragments are drawn into
-    /// a hand for the player to choose from, then permanently removed once played.
-    /// No category-repetition or credibility logic here — that belongs to a future system.
+    /// Single-use pool of excuse fragments for a run. A fragment leaves the pool the moment
+    /// it is drawn into the hand, not when it is played: the hand is the only place a drawn
+    /// fragment exists, and discarding it loses it for the rest of the run. The pool is never
+    /// refilled, so running it dry is what eventually ends the run.
+    /// Holds no scoring or category logic — that lives in TaskManager.
     /// </summary>
     public class DeckManager : MonoBehaviour
     {
@@ -46,15 +48,11 @@ namespace GmtkCountdown
         }
 
         /// <summary>
-        /// Permanently removes the specified fragment from the pool. Call this after the
-        /// player plays it, not when it is merely drawn into a hand.
+        /// Reinitializes the pool as a fresh copy of the full deck. The initial shuffle is not
+        /// what makes draws random — <see cref="DrawFragments"/> picks a random index every time,
+        /// so pool order never affects what comes out. Called once on Awake; a run is restarted
+        /// by reloading the scene, not by calling this.
         /// </summary>
-        public void RemoveFragment(FragmentData fragment)
-        {
-            availableFragments.Remove(fragment);
-        }
-
-        /// <summary>Reinitializes the pool as a fresh shuffled copy of the full deck.</summary>
         public void ResetDeck()
         {
             availableFragments = new List<FragmentData>(fullDeck);
