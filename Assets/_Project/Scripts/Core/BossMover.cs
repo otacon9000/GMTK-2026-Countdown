@@ -34,6 +34,34 @@ namespace GmtkCountdown
         private float originalScaleX;
         private Vector3 lastPosition;
 
+        private void Awake()
+        {
+            // Every reference below is dereferenced every frame in Update, so a missing one
+            // would mean an exception per frame. Report all of them at once — fixing them one
+            // Play session at a time is the slow way — and switch the component off so the
+            // error is reported once instead of drowning the console.
+            bool missingReference = ReportIfMissing(pointA, nameof(pointA));
+            missingReference |= ReportIfMissing(pointB, nameof(pointB));
+            missingReference |= ReportIfMissing(countdownController, nameof(countdownController));
+            missingReference |= ReportIfMissing(animator, nameof(animator));
+
+            if (missingReference)
+            {
+                enabled = false;
+            }
+        }
+
+        private bool ReportIfMissing(UnityEngine.Object reference, string fieldName)
+        {
+            if (reference != null)
+            {
+                return false;
+            }
+
+            Debug.LogError($"[BossMover] '{fieldName}' is not assigned in the Inspector; disabling this component.", this);
+            return true;
+        }
+
         private void Start()
         {
             transform.position = pointA.position;
@@ -61,6 +89,11 @@ namespace GmtkCountdown
 
         private void Update()
         {
+            if (GameManager.Instance == null)
+            {
+                return;
+            }
+
             animator.SetBool(IsWalkingHash, GameManager.Instance.CurrentState == GameState.Countdown);
 
             if (GameManager.Instance.CurrentState != GameState.Countdown)

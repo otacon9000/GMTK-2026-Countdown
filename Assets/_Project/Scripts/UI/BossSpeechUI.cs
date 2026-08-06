@@ -14,9 +14,34 @@ namespace GmtkCountdown
             "I'm waiting."
         };
 
-        private void Start()
+        // Hiding the speech area happens in Awake rather than Start, for the same reason as in
+        // DebugUIController: GameManager fires the first transition from Start(), and the order
+        // of Start() between components is undefined.
+        private void Awake()
         {
+            bool missingReference = ReportIfMissing(speechText, nameof(speechText));
+            missingReference |= ReportIfMissing(speechAreaRoot, nameof(speechAreaRoot));
+
+            if (missingReference)
+            {
+                // Disabling before OnEnable also means this never subscribes to OnStateChanged,
+                // so the missing reference can't blow up on the first Interruption either.
+                enabled = false;
+                return;
+            }
+
             speechAreaRoot.SetActive(false);
+        }
+
+        private bool ReportIfMissing(UnityEngine.Object reference, string fieldName)
+        {
+            if (reference != null)
+            {
+                return false;
+            }
+
+            Debug.LogError($"[BossSpeechUI] '{fieldName}' is not assigned in the Inspector; disabling this component.", this);
+            return true;
         }
 
         private void OnEnable()

@@ -71,6 +71,11 @@ namespace GmtkCountdown
 
         private void Update()
         {
+            if (GameManager.Instance == null)
+            {
+                return;
+            }
+
             if (GameManager.Instance.CurrentState != GameState.Countdown)
             {
                 return;

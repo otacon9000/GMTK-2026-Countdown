@@ -36,6 +36,14 @@ namespace GmtkCountdown
 
         private void Awake()
         {
+            if (firstTaskData == null)
+            {
+                // Left unassigned, the first PlayFragment would fail on CurrentThreshold with a
+                // bare NullReferenceException that says nothing about which field is missing.
+                Debug.LogError($"[TaskManager] '{nameof(firstTaskData)}' is not assigned in the Inspector; the run has no task to work on.", this);
+                return;
+            }
+
             currentTaskData = firstTaskData;
         }
 

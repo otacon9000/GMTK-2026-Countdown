@@ -47,7 +47,11 @@ namespace GmtkCountdown
         // the very first Countdown of a run, and every TaskCompleted -> Countdown bounce.
         private bool freeRefillPending = true;
 
-        private void Start()
+        // Panel visibility is set up in Awake rather than Start on purpose: GameManager fires
+        // the run's first state transition from its own Start(), and Unity does not define the
+        // order of Start() between components. Every Awake() is guaranteed to run before any
+        // Start(), so these panels are always hidden before the first transition arrives.
+        private void Awake()
         {
             if (breakChoicePanel != null)
             {
@@ -215,6 +219,11 @@ namespace GmtkCountdown
 
         private void Update()
         {
+            if (GameManager.Instance == null)
+            {
+                return;
+            }
+
             switch (GameManager.Instance.CurrentState)
             {
                 case GameState.Countdown:
