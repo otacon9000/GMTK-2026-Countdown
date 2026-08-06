@@ -10,7 +10,7 @@ namespace GmtkCountdown
         [SerializeField] private Button button;
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text detailsText;
-        [SerializeField] private DebugUIController controller;
+        [SerializeField] private GameplayController controller;
 
         private void Awake()
         {

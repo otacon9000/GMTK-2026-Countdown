@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
+using UnityEngine;
 
 namespace GmtkCountdown.Editor
 {
@@ -74,6 +75,28 @@ namespace GmtkCountdown.Editor
             {
                 AssetDatabase.CreateFolder(parentFolder, folderName);
             }
+        }
+
+        /// <summary>
+        /// Reports what a generation run created and what it left alone. Skipped entries are listed
+        /// individually: re-running a generator is expected to skip everything, and seeing which
+        /// paths were matched is the only way to tell "already there" from "silently renamed".
+        /// </summary>
+        public static void LogSummary(string toolName, string assetTypeName, string folder, List<string> createdPaths, List<string> skippedPaths)
+        {
+            var summary = new StringBuilder();
+            summary.AppendLine($"{toolName}: created {createdPaths.Count} {assetTypeName} asset(s) in {folder}.");
+
+            if (skippedPaths.Count > 0)
+            {
+                summary.AppendLine($"Skipped {skippedPaths.Count} already-existing asset(s):");
+                foreach (string skipped in skippedPaths)
+                {
+                    summary.AppendLine($"  - {skipped}");
+                }
+            }
+
+            Debug.Log(summary.ToString());
         }
     }
 }

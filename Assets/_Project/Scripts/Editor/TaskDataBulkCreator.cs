@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,22 +36,20 @@ namespace GmtkCountdown.Editor
         [MenuItem("Tools/GMTK Countdown/Generate Task Data Batch")]
         private static void GenerateTaskDataBatch()
         {
-            if (!AssetDatabase.IsValidFolder(TargetFolder))
-            {
-                AssetDatabase.CreateFolder("Assets/_Project/ScriptableObjects", "Tasks");
-            }
+            BulkCreatorUtility.EnsureFolder("Assets/_Project/ScriptableObjects", "Tasks");
 
-            var createdNames = new List<string>();
-            var skippedNames = new List<string>();
+            var createdPaths = new List<string>();
+            var skippedPaths = new List<string>();
+            var pathsUsedThisRun = new HashSet<string>();
 
             foreach (var (taskName, requiredTime, scoreValue) in TasksToCreate)
             {
                 string baseFileName = "Task_" + BulkCreatorUtility.SanitizeName(taskName, MaxNameLength);
-                string assetPath = $"{TargetFolder}/{baseFileName}.asset";
+                string assetPath = BulkCreatorUtility.ResolveUniquePath(TargetFolder, baseFileName, pathsUsedThisRun);
 
                 if (AssetDatabase.LoadAssetAtPath<TaskData>(assetPath) != null)
                 {
-                    skippedNames.Add(assetPath);
+                    skippedPaths.Add(assetPath);
                     continue;
                 }
 
@@ -64,24 +61,13 @@ namespace GmtkCountdown.Editor
                 serializedObject.ApplyModifiedProperties();
 
                 AssetDatabase.CreateAsset(taskData, assetPath);
-                createdNames.Add(assetPath);
+                createdPaths.Add(assetPath);
             }
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            var summary = new StringBuilder();
-            summary.AppendLine($"TaskDataBulkCreator: created {createdNames.Count} TaskData asset(s) in {TargetFolder}.");
-            if (skippedNames.Count > 0)
-            {
-                summary.AppendLine($"Skipped {skippedNames.Count} already-existing asset(s):");
-                foreach (var skipped in skippedNames)
-                {
-                    summary.AppendLine($"  - {skipped}");
-                }
-            }
-
-            Debug.Log(summary.ToString());
+            BulkCreatorUtility.LogSummary("TaskDataBulkCreator", "TaskData", TargetFolder, createdPaths, skippedPaths);
         }
     }
 }

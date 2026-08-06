@@ -12,18 +12,17 @@ namespace GmtkCountdown
         [SerializeField] private float countdownDuration = 4f;
         [SerializeField] private float minimumCountdownDuration = 2f;
 
-        private float currentTime;
-        private float currentActiveDuration;
-        private float? nextCountdownDuration;
-
-        /// <summary>Seconds remaining in the current countdown.</summary>
-        public float TimeRemaining => currentTime;
+        // The three durations, in the order they flow: queued for the next round, running for
+        // the current one, and how much of it is left.
+        private float? queuedDuration;
+        private float activeDuration;
+        private float timeRemaining;
 
         /// <summary>Remaining time as a 0-1 fraction of the current countdown's starting duration.</summary>
-        public float TimeRemainingNormalized => currentActiveDuration > 0f ? currentTime / currentActiveDuration : 0f;
+        public float TimeRemainingNormalized => activeDuration > 0f ? timeRemaining / activeDuration : 0f;
 
         /// <summary>The starting duration (seconds) of the current/most recent Countdown round.</summary>
-        public float CurrentActiveDuration => currentActiveDuration;
+        public float ActiveDuration => activeDuration;
 
         private void OnEnable()
         {
@@ -41,7 +40,7 @@ namespace GmtkCountdown
         /// </summary>
         public void SetNextCountdownDuration(float earnedTime)
         {
-            nextCountdownDuration = Mathf.Max(earnedTime, minimumCountdownDuration);
+            queuedDuration = Mathf.Max(earnedTime, minimumCountdownDuration);
         }
 
         /// <summary>
@@ -51,37 +50,42 @@ namespace GmtkCountdown
         /// </summary>
         public void ConsumeTime(float amount)
         {
-            currentTime = Mathf.Max(0f, currentTime - amount);
+            timeRemaining = Mathf.Max(0f, timeRemaining - amount);
         }
 
         private void HandleStateChanged(GameState newState)
         {
             if (newState == GameState.Countdown)
             {
-                if (nextCountdownDuration.HasValue)
+                if (queuedDuration.HasValue)
                 {
-                    currentActiveDuration = nextCountdownDuration.Value;
-                    nextCountdownDuration = null;
+                    activeDuration = queuedDuration.Value;
+                    queuedDuration = null;
                 }
                 else
                 {
-                    currentActiveDuration = countdownDuration;
+                    activeDuration = countdownDuration;
                 }
 
-                currentTime = currentActiveDuration;
+                timeRemaining = activeDuration;
             }
         }
 
         private void Update()
         {
+            if (GameManager.Instance == null)
+            {
+                return;
+            }
+
             if (GameManager.Instance.CurrentState != GameState.Countdown)
             {
                 return;
             }
 
-            currentTime -= Time.deltaTime;
+            timeRemaining -= Time.deltaTime;
 
-            if (currentTime <= 0f)
+            if (timeRemaining <= 0f)
             {
                 GameManager.Instance.ChangeState(GameState.Interruption);
             }

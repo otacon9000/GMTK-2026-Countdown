@@ -24,21 +24,45 @@ namespace GmtkCountdown
         public static event Action<GameState> OnStateChanged;
 
         /// <summary>
-        /// Optional check invoked whenever a transition into <see cref="GameState.Interruption"/>
-        /// is requested: return true if the player currently has at least one fragment available
-        /// to play. Set by whichever system owns the hand (currently DebugUIController). If null,
-        /// the check is skipped. Redirects to <see cref="GameState.GameOver"/> when it returns false,
-        /// so no caller can trigger an Interruption with nothing to play.
+        /// Consulted before entering <see cref="GameState.Interruption"/>: an Interruption with
+        /// nothing in hand has no move in it, so the request is redirected to
+        /// <see cref="GameState.GameOver"/> instead. This is the one gameplay question this class
+        /// asks, and it is wired in the Inspector rather than registered at runtime, so there is
+        /// exactly one answerer and it is visible without reading any other file.
         /// </summary>
-        public static Func<bool> HasPlayableFragment;
+        [SerializeField] private GameplayController gameplayController;
 
         private GameState currentState = GameState.Countdown;
+
+        // True while OnStateChanged is being raised. A subscriber is allowed to request another
+        // transition from inside its handler; queueing it here rather than running it immediately
+        // is what keeps CurrentState in step with the newState every subscriber is being handed.
+        private bool isNotifying;
+
+        // The transition a subscriber asked for while the current one was still being delivered.
+        // A single slot, not a queue: only one such request exists today (TaskCompleted -> Break),
+        // and if two subscribers ever asked during the same notification the last one would win.
+        private GameState? pendingState;
 
         /// <summary>
         /// The state the game is currently in. Read-only from outside; change it via
         /// <see cref="ChangeState"/>.
         /// </summary>
         public GameState CurrentState => currentState;
+
+        /// <summary>
+        /// Clears the static state before every play session. With "Enter Play Mode Options" set
+        /// to skip the domain reload — the usual way to speed up iteration in Unity 6 — statics
+        /// keep their values from the previous session, so <see cref="Instance"/> would still
+        /// point at a destroyed object and <see cref="OnStateChanged"/> would still hold handlers
+        /// belonging to it. Both are reset here rather than relying on the reload happening.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            Instance = null;
+            OnStateChanged = null;
+        }
 
         private void Awake()
         {
@@ -50,6 +74,14 @@ namespace GmtkCountdown
             }
 
             Instance = this;
+
+            if (gameplayController == null)
+            {
+                // Fail open rather than closed: without an answerer the Interruption goes ahead,
+                // which is what happened before this was an explicit reference. It can leave the
+                // game with nothing to do in Interruption, so the error has to be loud.
+                Debug.LogError($"[GameManager] '{nameof(gameplayController)}' is not assigned in the Inspector; an Interruption with an empty hand can no longer be redirected to GameOver.", this);
+            }
         }
 
         private void Start()
@@ -59,35 +91,61 @@ namespace GmtkCountdown
 
         /// <summary>
         /// Transitions the game to <paramref name="newState"/>, updates the current state and
-        /// notifies subscribers. Keep this a flat switch: no per-state Enter/Exit methods for now.
+        /// notifies subscribers. There is deliberately no per-state logic here: everything that
+        /// has to happen on a given state belongs in a subscriber to <see cref="OnStateChanged"/>.
+        /// <para>
+        /// Calling this from inside a subscriber is allowed and is how TaskCompleted moves on to
+        /// Break. Such a call does not transition immediately: it is queued and applied once the
+        /// current notification has reached every subscriber. Without that, subscribers later in
+        /// the invocation list would still be receiving the old state as
+        /// <paramref name="newState"/> while <see cref="CurrentState"/> already held the new one,
+        /// and would receive the two transitions in reverse order — a discrepancy that depends on
+        /// subscription order and would surface as an unreproducible bug.
+        /// </para>
         /// </summary>
         /// <param name="newState">The state to transition into.</param>
         public void ChangeState(GameState newState)
         {
-            if (newState == GameState.Interruption && HasPlayableFragment != null && !HasPlayableFragment())
+            if (newState == GameState.Interruption && gameplayController != null && !gameplayController.HasPlayableFragment())
             {
                 newState = GameState.GameOver;
             }
 
-            switch (newState)
+            if (isNotifying)
             {
-                case GameState.Countdown:
-                    break;
-                case GameState.Interruption:
-                    break;
-                case GameState.ComboResolution:
-                    break;
-                case GameState.TaskCompleted:
-                    break;
-                case GameState.GameOver:
-                    break;
-                case GameState.Break:
-                    break;
+                pendingState = newState;
+                return;
             }
 
-            currentState = newState;
-            Debug.Log($"[GameManager] State changed to: {newState}");
-            OnStateChanged?.Invoke(newState);
+            isNotifying = true;
+
+            try
+            {
+                GameState stateToApply = newState;
+
+                while (true)
+                {
+                    currentState = stateToApply;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[GameManager] State changed to: {stateToApply}");
+#endif
+                    OnStateChanged?.Invoke(stateToApply);
+
+                    if (!pendingState.HasValue)
+                    {
+                        break;
+                    }
+
+                    stateToApply = pendingState.Value;
+                    pendingState = null;
+                }
+            }
+            finally
+            {
+                // Without this, a subscriber throwing would leave the flag set and every later
+                // transition would be queued and never applied: the game would freeze silently.
+                isNotifying = false;
+            }
         }
     }
 }
