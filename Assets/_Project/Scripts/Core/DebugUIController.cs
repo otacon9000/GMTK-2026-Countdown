@@ -36,7 +36,6 @@ namespace GmtkCountdown
         private const int TaskChoiceCount = 3;
 
         private readonly List<FragmentData> hand = new List<FragmentData> { null, null, null, null };
-        private int? lastQueuedCountdownDuration;
         private List<TaskData> currentTaskChoices = new List<TaskData>();
 
         // True right before a Countdown state that should get a free full refill:
@@ -369,8 +368,6 @@ namespace GmtkCountdown
                 countdownController.SetNextCountdownDuration(effectiveValue);
             }
 
-            lastQueuedCountdownDuration = effectiveValue;
-
             Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
 
             taskManager.EvaluateProgress(deckManager);
@@ -399,11 +396,6 @@ namespace GmtkCountdown
             }
 
             return currentTaskChoices[index];
-        }
-
-        public int GetTaskChoiceCount()
-        {
-            return currentTaskChoices.Count;
         }
 
         public bool HasEmptySlot()
@@ -448,60 +440,6 @@ namespace GmtkCountdown
                     drawnIndex++;
                 }
             }
-        }
-
-        private void OnGUI()
-        {
-            return;
-#pragma warning disable CS0162
-            GUILayout.BeginArea(new Rect(10, 10, 500, 400));
-            GUILayout.Label($"State: {GameManager.Instance.CurrentState}");
-            GUILayout.Label($"Fragments remaining in deck: {deckManager.RemainingCount}");
-            GUILayout.Label($"Task {taskManager.CurrentTaskIndex + 1}: {taskManager.CurrentTaskData.Name} (threshold: {taskManager.CurrentThreshold})");
-            GUILayout.Label($"Accumulated credibility: {taskManager.AccumulatedCredibility}");
-
-            if (lastQueuedCountdownDuration.HasValue)
-            {
-                GUILayout.Label($"Next countdown queued: {lastQueuedCountdownDuration.Value}s");
-            }
-
-            if (GameManager.Instance.CurrentState == GameState.Countdown && countdownController != null)
-            {
-                GUILayout.Label($"Countdown: {countdownController.TimeRemaining:F1}s");
-            }
-
-            GUILayout.Space(10);
-            GUILayout.Label("Hand:");
-            for (int i = 0; i < HandCapacity; i++)
-            {
-                FragmentData fragment = hand[i];
-                string label = fragment != null ? $"{fragment.Text} ({fragment.Category})" : "(empty)";
-                GUILayout.Label($"{i + 1}: {label}");
-            }
-
-            if (GameManager.Instance.CurrentState == GameState.Break)
-            {
-                GUILayout.Space(10);
-                GUILayout.Label("Break - choose next task:");
-                for (int i = 0; i < currentTaskChoices.Count; i++)
-                {
-                    TaskData choice = currentTaskChoices[i];
-                    GUILayout.Label($"{i + 1}: {choice.Name} (threshold: {choice.RequiredTime}, score: {choice.ScoreValue})");
-                }
-
-                GUILayout.Label("Break: 1-3 = pick next task");
-            }
-
-            if (GameManager.Instance.CurrentState == GameState.GameOver)
-            {
-                GUILayout.Label($"GAME OVER - Tasks completed: {taskManager.CurrentTaskIndex} - Total score: {taskManager.TotalScore}");
-            }
-
-            GUILayout.Space(10);
-            GUILayout.Label("K = trigger interruption (Countdown only)");
-            GUILayout.Label("Countdown: 1-4 discard | R = redraw (-3s) | Interruption: 1-4 = play fragment");
-            GUILayout.EndArea();
-#pragma warning restore CS0162
         }
     }
 }
