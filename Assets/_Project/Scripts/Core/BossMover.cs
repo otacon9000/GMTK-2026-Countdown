@@ -10,13 +10,27 @@ namespace GmtkCountdown
     /// </summary>
     public class BossMover : MonoBehaviour
     {
+        // Fraction of a Countdown round the boss spends retreating away from pointB.
+        // The remainder of the round is spent walking back to pointB, so that the boss
+        // is always at pointB exactly when the countdown hits zero.
+        private const float RetreatPhaseFraction = 0.5f;
+
+        // Horizontal movement below this is treated as standing still and does not flip
+        // the sprite, so float jitter at the turnaround point can't cause a flicker.
+        private const float FlipMovementThreshold = 0.001f;
+
+        private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+
         [SerializeField] private Transform pointA;
         [SerializeField] private Transform pointB;
         [SerializeField] private CountdownController countdownController;
         [SerializeField] private Animator animator;
         [SerializeField] private float distancePerSecond = 1.5f;
 
-        private bool hasEverStarted = false;
+        // False until the boss has finished its one-off walk-in from pointA to pointB,
+        // which ends at the first Interruption. From then on every Countdown is a
+        // retreat-and-return cycle instead.
+        private bool hasCompletedWalkIn = false;
         private float originalScaleX;
         private Vector3 lastPosition;
 
@@ -39,15 +53,15 @@ namespace GmtkCountdown
 
         private void HandleStateChanged(GameState newState)
         {
-            if (newState == GameState.Interruption && !hasEverStarted)
+            if (newState == GameState.Interruption && !hasCompletedWalkIn)
             {
-                hasEverStarted = true;
+                hasCompletedWalkIn = true;
             }
         }
 
         private void Update()
         {
-            animator.SetBool("IsWalking", GameManager.Instance.CurrentState == GameState.Countdown);
+            animator.SetBool(IsWalkingHash, GameManager.Instance.CurrentState == GameState.Countdown);
 
             if (GameManager.Instance.CurrentState != GameState.Countdown)
             {
@@ -57,7 +71,7 @@ namespace GmtkCountdown
             float normalized = countdownController.TimeRemainingNormalized;
             Vector3 newPosition;
 
-            if (!hasEverStarted)
+            if (!hasCompletedWalkIn)
             {
                 newPosition = Vector3.Lerp(pointA.position, pointB.position, 1f - normalized);
             }
@@ -68,23 +82,23 @@ namespace GmtkCountdown
                 float retreatDistance = Mathf.Min(currentDuration * distancePerSecond, Vector3.Distance(pointB.position, pointA.position));
                 Vector3 retreatPoint = Vector3.MoveTowards(pointB.position, pointA.position, retreatDistance);
 
-                if (p < 0.5f)
+                if (p < RetreatPhaseFraction)
                 {
-                    float t = p / 0.5f;
+                    float t = p / RetreatPhaseFraction;
                     newPosition = Vector3.Lerp(pointB.position, retreatPoint, t);
                 }
                 else
                 {
-                    float t = (p - 0.5f) / 0.5f;
+                    float t = (p - RetreatPhaseFraction) / (1f - RetreatPhaseFraction);
                     newPosition = Vector3.Lerp(retreatPoint, pointB.position, t);
                 }
             }
 
-            if (newPosition.x > lastPosition.x + 0.001f)
+            if (newPosition.x > lastPosition.x + FlipMovementThreshold)
             {
                 transform.localScale = new Vector3(-originalScaleX, transform.localScale.y, transform.localScale.z);
             }
-            else if (newPosition.x < lastPosition.x - 0.001f)
+            else if (newPosition.x < lastPosition.x - FlipMovementThreshold)
             {
                 transform.localScale = new Vector3(originalScaleX, transform.localScale.y, transform.localScale.z);
             }
