@@ -16,9 +16,6 @@ namespace GmtkCountdown
         private float currentActiveDuration;
         private float? nextCountdownDuration;
 
-        /// <summary>Seconds remaining in the current countdown.</summary>
-        public float TimeRemaining => currentTime;
-
         /// <summary>Remaining time as a 0-1 fraction of the current countdown's starting duration.</summary>
         public float TimeRemainingNormalized => currentActiveDuration > 0f ? currentTime / currentActiveDuration : 0f;
 

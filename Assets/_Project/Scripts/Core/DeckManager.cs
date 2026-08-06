@@ -48,14 +48,24 @@ namespace GmtkCountdown
         }
 
         /// <summary>
-        /// Reinitializes the pool as a fresh copy of the full deck. The initial shuffle is not
-        /// what makes draws random — <see cref="DrawFragments"/> picks a random index every time,
-        /// so pool order never affects what comes out. Called once on Awake; a run is restarted
-        /// by reloading the scene, not by calling this.
+        /// Reinitializes the pool as a fresh copy of the full deck, skipping any empty entries
+        /// left in the serialized list: a null would occupy a draw and silently cost the player
+        /// a redraw for no card. The initial shuffle is not what makes draws random —
+        /// <see cref="DrawFragments"/> picks a random index every time, so pool order never
+        /// affects what comes out. Called once on Awake; a run is restarted by reloading the
+        /// scene, not by calling this.
         /// </summary>
-        public void ResetDeck()
+        private void ResetDeck()
         {
-            availableFragments = new List<FragmentData>(fullDeck);
+            availableFragments = new List<FragmentData>(fullDeck.Count);
+            foreach (FragmentData fragment in fullDeck)
+            {
+                if (fragment != null)
+                {
+                    availableFragments.Add(fragment);
+                }
+            }
+
             Shuffle(availableFragments);
         }
 

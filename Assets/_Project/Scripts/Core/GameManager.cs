@@ -71,7 +71,7 @@ namespace GmtkCountdown
             }
 
             currentState = newState;
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameManager] State changed to: {newState}");
 #endif
             OnStateChanged?.Invoke(newState);

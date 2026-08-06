@@ -22,9 +22,6 @@ namespace GmtkCountdown
         private int accumulatedCredibility;
         private FragmentCategory? lastPlayedCategory;
 
-        /// <summary>The task currently being worked on.</summary>
-        public TaskData CurrentTaskData => currentTaskData;
-
         /// <summary>Tasks completed so far in this run.</summary>
         public int CurrentTaskIndex => tasksCompletedCount;
 

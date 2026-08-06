@@ -37,7 +37,10 @@ namespace GmtkCountdown
 
         private const int TaskChoiceCount = 3;
 
-        private readonly List<FragmentData> hand = new List<FragmentData> { null, null, null, null };
+        // One entry per hand position, all starting empty. HandCapacity is the single source of
+        // truth for how big the hand is: the cardSlots array is only the view onto it, and may
+        // legitimately have a different length if the scene is mid-edit.
+        private readonly List<FragmentData> hand = new List<FragmentData>(new FragmentData[HandCapacity]);
         private List<TaskData> currentTaskChoices = new List<TaskData>();
 
         // True right before a Countdown state that should get a free full refill:
@@ -181,7 +184,7 @@ namespace GmtkCountdown
             // TaskCompleted stub: bounce straight to the Break task-selection screen.
             if (newState == GameState.TaskCompleted)
             {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DebugUIController] Task completed, moving to Break (Task {taskManager.CurrentTaskIndex + 1})");
 #endif
                 freeRefillPending = true;
@@ -263,10 +266,11 @@ namespace GmtkCountdown
 
         private void HandleCountdownInput()
         {
-#if UNITY_EDITOR
-            // Editor-only shortcut to skip the countdown wait while testing.
-            // Never compiled into a player build: it would let the game be played
-            // without any time pressure at all.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            // Shortcut to skip the countdown wait while testing. Compiled only into the
+            // editor and development builds, so external playtest builds keep it while the
+            // public build cannot: there it would let the game be played with no time
+            // pressure at all.
             if (Input.GetKeyDown(KeyCode.K))
             {
                 GameManager.Instance.ChangeState(GameState.Interruption);
@@ -307,6 +311,11 @@ namespace GmtkCountdown
                 return;
             }
 
+            if (index < 0 || index >= hand.Count)
+            {
+                return;
+            }
+
             if (hand[index] == null)
             {
                 return;
@@ -327,7 +336,7 @@ namespace GmtkCountdown
                 return;
             }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DebugUIController] Discarded '{hand[index].Text}' from slot {index + 1}");
 #endif
             hand[index] = null;
@@ -355,7 +364,7 @@ namespace GmtkCountdown
             hand[emptyIndex] = drawn[0];
             countdownController.ConsumeTime(RedrawCost);
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DebugUIController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
 #endif
         }
@@ -363,6 +372,11 @@ namespace GmtkCountdown
         public void TryPlaySlot(int index)
         {
             if (GameManager.Instance.CurrentState != GameState.Interruption)
+            {
+                return;
+            }
+
+            if (index < 0 || index >= hand.Count)
             {
                 return;
             }
@@ -381,7 +395,7 @@ namespace GmtkCountdown
                 countdownController.SetNextCountdownDuration(effectiveValue);
             }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
 #endif
 
@@ -425,6 +439,11 @@ namespace GmtkCountdown
 
         public FragmentData GetHandSlot(int index)
         {
+            if (index < 0 || index >= hand.Count)
+            {
+                return null;
+            }
+
             return hand[index];
         }
 
