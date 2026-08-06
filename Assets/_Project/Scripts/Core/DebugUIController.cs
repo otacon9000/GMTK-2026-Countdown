@@ -179,7 +179,9 @@ namespace GmtkCountdown
             // TaskCompleted stub: bounce straight to the Break task-selection screen.
             if (newState == GameState.TaskCompleted)
             {
+#if UNITY_EDITOR
                 Debug.Log($"[DebugUIController] Task completed, moving to Break (Task {taskManager.CurrentTaskIndex + 1})");
+#endif
                 freeRefillPending = true;
                 GameManager.Instance.ChangeState(GameState.Break);
             }
@@ -259,10 +261,15 @@ namespace GmtkCountdown
 
         private void HandleCountdownInput()
         {
+#if UNITY_EDITOR
+            // Editor-only shortcut to skip the countdown wait while testing.
+            // Never compiled into a player build: it would let the game be played
+            // without any time pressure at all.
             if (Input.GetKeyDown(KeyCode.K))
             {
                 GameManager.Instance.ChangeState(GameState.Interruption);
             }
+#endif
 
             for (int i = 0; i < HandCapacity; i++)
             {
@@ -318,7 +325,9 @@ namespace GmtkCountdown
                 return;
             }
 
+#if UNITY_EDITOR
             Debug.Log($"[DebugUIController] Discarded '{hand[index].Text}' from slot {index + 1}");
+#endif
             hand[index] = null;
         }
 
@@ -344,7 +353,9 @@ namespace GmtkCountdown
             hand[emptyIndex] = drawn[0];
             countdownController.ConsumeTime(RedrawCost);
 
+#if UNITY_EDITOR
             Debug.Log($"[DebugUIController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
+#endif
         }
 
         public void TryPlaySlot(int index)
@@ -368,7 +379,9 @@ namespace GmtkCountdown
                 countdownController.SetNextCountdownDuration(effectiveValue);
             }
 
+#if UNITY_EDITOR
             Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
+#endif
 
             taskManager.EvaluateProgress(deckManager);
         }
