@@ -24,13 +24,13 @@ namespace GmtkCountdown
         public static event Action<GameState> OnStateChanged;
 
         /// <summary>
-        /// Optional check invoked whenever a transition into <see cref="GameState.Interruption"/>
-        /// is requested: return true if the player currently has at least one fragment available
-        /// to play. Set by whichever system owns the hand (currently GameplayController). If null,
-        /// the check is skipped. Redirects to <see cref="GameState.GameOver"/> when it returns false,
-        /// so no caller can trigger an Interruption with nothing to play.
+        /// Consulted before entering <see cref="GameState.Interruption"/>: an Interruption with
+        /// nothing in hand has no move in it, so the request is redirected to
+        /// <see cref="GameState.GameOver"/> instead. This is the one gameplay question this class
+        /// asks, and it is wired in the Inspector rather than registered at runtime, so there is
+        /// exactly one answerer and it is visible without reading any other file.
         /// </summary>
-        public static Func<bool> HasPlayableFragment;
+        [SerializeField] private GameplayController gameplayController;
 
         private GameState currentState = GameState.Countdown;
 
@@ -60,6 +60,14 @@ namespace GmtkCountdown
             }
 
             Instance = this;
+
+            if (gameplayController == null)
+            {
+                // Fail open rather than closed: without an answerer the Interruption goes ahead,
+                // which is what happened before this was an explicit reference. It can leave the
+                // game with nothing to do in Interruption, so the error has to be loud.
+                Debug.LogError($"[GameManager] '{nameof(gameplayController)}' is not assigned in the Inspector; an Interruption with an empty hand can no longer be redirected to GameOver.", this);
+            }
         }
 
         private void Start()
@@ -84,7 +92,7 @@ namespace GmtkCountdown
         /// <param name="newState">The state to transition into.</param>
         public void ChangeState(GameState newState)
         {
-            if (newState == GameState.Interruption && HasPlayableFragment != null && !HasPlayableFragment())
+            if (newState == GameState.Interruption && gameplayController != null && !gameplayController.HasPlayableFragment())
             {
                 newState = GameState.GameOver;
             }

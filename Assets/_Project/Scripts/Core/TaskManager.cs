@@ -117,28 +117,28 @@ namespace GmtkCountdown
         }
 
         /// <summary>
-        /// Decides whether the current task is complete, the run has ended, or play continues,
-        /// and drives the corresponding GameManager state transition. Call once right after
-        /// <see cref="PlayFragment"/>.
+        /// Banks the current task if the fragment just played met its requirement, and reports
+        /// whether it did. Call once right after <see cref="PlayFragment"/>.
+        /// <para>
+        /// Deciding what happens when the task is *not* complete — carry on or end the run — is
+        /// deliberately not done here: that answer depends on the hand and the deck, which this
+        /// class cannot see. The caller owns it.
+        /// </para>
         /// </summary>
-        public void EvaluateProgress(DeckManager deckManager)
+        /// <returns>True if the task was completed and the game is moving to TaskCompleted.</returns>
+        public bool TryCompleteCurrentTask()
         {
-            if (accumulatedEarnedTime >= CurrentRequiredTime)
+            if (accumulatedEarnedTime < CurrentRequiredTime)
             {
-                totalScore += currentTaskData.ScoreValue;
-                tasksCompletedCount++;
-                accumulatedEarnedTime = 0;
-                lastPlayedCategory = null;
-                GameManager.Instance.ChangeState(GameState.TaskCompleted);
+                return false;
             }
-            else if (deckManager.IsEmpty)
-            {
-                GameManager.Instance.ChangeState(GameState.GameOver);
-            }
-            else
-            {
-                GameManager.Instance.ChangeState(GameState.Countdown);
-            }
+
+            totalScore += currentTaskData.ScoreValue;
+            tasksCompletedCount++;
+            accumulatedEarnedTime = 0;
+            lastPlayedCategory = null;
+            GameManager.Instance.ChangeState(GameState.TaskCompleted);
+            return true;
         }
     }
 }

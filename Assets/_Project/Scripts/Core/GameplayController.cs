@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -72,22 +71,46 @@ namespace GmtkCountdown
         private void OnEnable()
         {
             GameManager.OnStateChanged += HandleStateChanged;
-            GameManager.HasPlayableFragment = HasPlayableFragmentInHand;
         }
 
         private void OnDisable()
         {
             GameManager.OnStateChanged -= HandleStateChanged;
-
-            if (GameManager.HasPlayableFragment == (Func<bool>)HasPlayableFragmentInHand)
-            {
-                GameManager.HasPlayableFragment = null;
-            }
         }
 
-        private bool HasPlayableFragmentInHand()
+        // ---------------------------------------------------------------------------------------
+        // When a run ends. Both questions live here, side by side, because this is the only class
+        // that can see both the hand and the deck. They are deliberately different questions, and
+        // the difference is the whole rule:
+        //
+        //   HasPlayableFragment  - can the player act *right now*?
+        //   CanContinueRun       - can the player act *at all*, now or after the coming Countdown?
+        //
+        // A full deck is worth nothing at the moment an Interruption starts, because drawing is
+        // only possible during a Countdown; but it is worth everything right after a play, because
+        // a Countdown is exactly what comes next.
+        // ---------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// True when the player holds at least one fragment they could play. Asked by GameManager
+        /// before entering an Interruption: with nothing in hand there is no move to make, and the
+        /// run is over however many fragments are left in the deck.
+        /// </summary>
+        public bool HasPlayableFragment()
         {
             return hand.HasAnyFragment;
+        }
+
+        /// <summary>
+        /// True when the run can go on: the player either still holds a fragment, or can still
+        /// redraw one during the Countdown that is about to start. Asked after a fragment has been
+        /// played and the current task is still unfinished. An empty hand is not the end as long
+        /// as the deck can refill it — that Countdown is the player's last chance, and spending it
+        /// without redrawing is what actually ends the run.
+        /// </summary>
+        public bool CanContinueRun()
+        {
+            return hand.HasAnyFragment || !deckManager.IsEmpty;
         }
 
         /// <summary>
@@ -413,7 +436,12 @@ namespace GmtkCountdown
             Debug.Log($"[GameplayController] Picked '{fragment.Text}' ({fragment.Category}, earned {earnedTime}) - accumulated earned time: {taskManager.AccumulatedEarnedTime}/{taskManager.CurrentRequiredTime} -> next countdown: {earnedTime}s");
 #endif
 
-            taskManager.EvaluateProgress(deckManager);
+            // The single decision point for how a run ends: if the task isn't finished, the run
+            // carries on only while the player still has something to play or to draw.
+            if (!taskManager.TryCompleteCurrentTask())
+            {
+                GameManager.Instance.ChangeState(CanContinueRun() ? GameState.Countdown : GameState.GameOver);
+            }
         }
 
         public void TrySelectTaskChoice(int index)
