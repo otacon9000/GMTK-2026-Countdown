@@ -111,8 +111,8 @@ namespace GmtkCountdown
             else
             {
                 float p = 1f - normalized;
-                float currentDuration = countdownController.CurrentActiveDuration;
-                float retreatDistance = Mathf.Min(currentDuration * distancePerSecond, Vector3.Distance(pointB.position, pointA.position));
+                float roundDuration = countdownController.ActiveDuration;
+                float retreatDistance = Mathf.Min(roundDuration * distancePerSecond, Vector3.Distance(pointB.position, pointA.position));
                 Vector3 retreatPoint = Vector3.MoveTowards(pointB.position, pointA.position, retreatDistance);
 
                 if (p < RetreatPhaseFraction)

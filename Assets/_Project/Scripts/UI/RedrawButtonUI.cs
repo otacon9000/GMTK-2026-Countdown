@@ -6,7 +6,7 @@ namespace GmtkCountdown
     public class RedrawButtonUI : MonoBehaviour
     {
         [SerializeField] private Button button;
-        [SerializeField] private DebugUIController controller;
+        [SerializeField] private GameplayController controller;
 
         private void Awake()
         {

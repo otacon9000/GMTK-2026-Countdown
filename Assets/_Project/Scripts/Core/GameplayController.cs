@@ -6,16 +6,15 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Main gameplay controller, despite the name: it owns the player's hand, drives the
+    /// Main gameplay controller: it owns the player's hand, drives the
     /// Countdown -> Interruption -> Break loop in response to <see cref="GameManager.OnStateChanged"/>,
     /// and toggles the gameplay UI groups. The hand is persistent across a task — fragments stay
     /// in it until discarded or played, and are refilled for free only at the start of a run and
     /// after each completed task; any other refill costs countdown time via TryRedraw.
     /// Both mouse (through CardSlotUI / RedrawButtonUI / TaskChoiceButtonUI) and keyboard drive
     /// the same public Try* methods, which are the entry points for every player action.
-    /// The "Debug" in the name is a leftover from the jam; a rename is pending.
     /// </summary>
-    public class DebugUIController : MonoBehaviour
+    public class GameplayController : MonoBehaviour
     {
         private const int HandCapacity = 4;
         private const float RedrawCost = 3f;
@@ -137,7 +136,7 @@ namespace GmtkCountdown
             {
                 if (gameOverPanel != null)
                 {
-                    gameOverPanel.RefreshDisplay(taskManager.CurrentTaskIndex, taskManager.TotalScore);
+                    gameOverPanel.RefreshDisplay(taskManager.TasksCompleted, taskManager.TotalScore);
                 }
 
                 SetGameplayUIRootsActive(false);
@@ -175,7 +174,7 @@ namespace GmtkCountdown
                 {
                     if (promptPool == null || promptPool.Count == 0)
                     {
-                        Debug.LogWarning("[DebugUIController] Prompt pool is empty, skipping prompt text update");
+                        Debug.LogWarning("[GameplayController] Prompt pool is empty, skipping prompt text update");
                     }
                     else
                     {
@@ -189,7 +188,7 @@ namespace GmtkCountdown
             if (newState == GameState.TaskCompleted)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[DebugUIController] Task completed, moving to Break (Task {taskManager.CurrentTaskIndex + 1})");
+                Debug.Log($"[GameplayController] Task completed, moving to Break ({taskManager.TasksCompleted} completed so far)");
 #endif
                 freeRefillPending = true;
                 GameManager.Instance.ChangeState(GameState.Break);
@@ -346,7 +345,7 @@ namespace GmtkCountdown
             }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[DebugUIController] Discarded '{hand[index].Text}' from slot {index + 1}");
+            Debug.Log($"[GameplayController] Discarded '{hand[index].Text}' from slot {index + 1}");
 #endif
             hand[index] = null;
         }
@@ -374,7 +373,7 @@ namespace GmtkCountdown
             countdownController.ConsumeTime(RedrawCost);
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[DebugUIController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
+            Debug.Log($"[GameplayController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
 #endif
         }
 
@@ -397,15 +396,15 @@ namespace GmtkCountdown
             }
 
             hand[index] = null;
-            int effectiveValue = taskManager.PlayFragment(fragment);
+            int earnedTime = taskManager.PlayFragment(fragment);
 
             if (countdownController != null)
             {
-                countdownController.SetNextCountdownDuration(effectiveValue);
+                countdownController.SetNextCountdownDuration(earnedTime);
             }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[DebugUIController] Picked '{fragment.Text}' ({fragment.Category}, effective {effectiveValue}) - accumulated credibility: {taskManager.AccumulatedCredibility} -> next countdown: {effectiveValue}s");
+            Debug.Log($"[GameplayController] Picked '{fragment.Text}' ({fragment.Category}, earned {earnedTime}) - accumulated earned time: {taskManager.AccumulatedEarnedTime}/{taskManager.CurrentRequiredTime} -> next countdown: {earnedTime}s");
 #endif
 
             taskManager.EvaluateProgress(deckManager);

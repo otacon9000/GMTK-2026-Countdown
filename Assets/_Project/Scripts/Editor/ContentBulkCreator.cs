@@ -35,7 +35,7 @@ namespace GmtkCountdown.Editor
             "The whole team is behind because {0}.",
         };
 
-        private static readonly (string fragmentText, FragmentCategory category, int credibilityValue)[] FragmentsToCreate =
+        private static readonly (string fragmentText, FragmentCategory category, int baseEarnedTime)[] FragmentsToCreate =
         {
             ("my laptop update took four hours", FragmentCategory.Technology, 25),
             ("the wifi went down again", FragmentCategory.Technology, 25),
@@ -127,7 +127,7 @@ namespace GmtkCountdown.Editor
             var skippedPaths = new List<string>();
             var pathsUsedThisRun = new HashSet<string>();
 
-            foreach (var (fragmentText, category, credibilityValue) in FragmentsToCreate)
+            foreach (var (fragmentText, category, baseEarnedTime) in FragmentsToCreate)
             {
                 string baseFileName = "Fragment_" + BulkCreatorUtility.SanitizeName(fragmentText, MaxNameLength);
                 string assetPath = BulkCreatorUtility.ResolveUniquePath(FragmentsFolder, baseFileName, pathsUsedThisRun);
@@ -142,7 +142,7 @@ namespace GmtkCountdown.Editor
                 var serializedObject = new SerializedObject(fragmentData);
                 serializedObject.FindProperty("fragmentText").stringValue = fragmentText;
                 serializedObject.FindProperty("category").enumValueIndex = (int)category;
-                serializedObject.FindProperty("credibilityValue").intValue = credibilityValue;
+                serializedObject.FindProperty("baseEarnedTime").intValue = baseEarnedTime;
                 serializedObject.ApplyModifiedProperties();
 
                 AssetDatabase.CreateAsset(fragmentData, assetPath);

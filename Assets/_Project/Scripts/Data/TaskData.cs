@@ -3,9 +3,9 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Data container for a single task: its comic name, the credibility threshold required
-    /// to complete it, and the score it awards on completion. Authored as an .asset via the
-    /// CreateAssetMenu entry; holds no gameplay logic.
+    /// Data container for a single task: its comic name, the earned time required to complete
+    /// it, and the score it awards on completion. Authored as an .asset via the CreateAssetMenu
+    /// entry; holds no gameplay logic.
     /// </summary>
     [CreateAssetMenu(fileName = "Task_", menuName = "GmtkCountdown/Task Data")]
     public class TaskData : ScriptableObject
@@ -17,7 +17,10 @@ namespace GmtkCountdown
         /// <summary>The comic task name shown to the player.</summary>
         public string Name => taskName;
 
-        /// <summary>Credibility/time threshold required to complete this task.</summary>
+        /// <summary>
+        /// Total earned time the player must accumulate to complete this task. Compared against
+        /// TaskManager.AccumulatedEarnedTime, not against elapsed seconds.
+        /// </summary>
         public int RequiredTime => requiredTime;
 
         /// <summary>Points awarded on completion of this task.</summary>

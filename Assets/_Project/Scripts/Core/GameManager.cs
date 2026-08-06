@@ -26,7 +26,7 @@ namespace GmtkCountdown
         /// <summary>
         /// Optional check invoked whenever a transition into <see cref="GameState.Interruption"/>
         /// is requested: return true if the player currently has at least one fragment available
-        /// to play. Set by whichever system owns the hand (currently DebugUIController). If null,
+        /// to play. Set by whichever system owns the hand (currently GameplayController). If null,
         /// the check is skipped. Redirects to <see cref="GameState.GameOver"/> when it returns false,
         /// so no caller can trigger an Interruption with nothing to play.
         /// </summary>

@@ -15,7 +15,7 @@ namespace GmtkCountdown
         };
 
         // Hiding the speech area happens in Awake rather than Start, for the same reason as in
-        // DebugUIController: GameManager fires the first transition from Start(), and the order
+        // GameplayController: GameManager fires the first transition from Start(), and the order
         // of Start() between components is undefined.
         private void Awake()
         {

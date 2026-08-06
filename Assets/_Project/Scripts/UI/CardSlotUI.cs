@@ -11,7 +11,7 @@ namespace GmtkCountdown
 
         [SerializeField] private int slotIndex;
         [SerializeField] private TMP_Text labelText;
-        [SerializeField] private DebugUIController controller;
+        [SerializeField] private GameplayController controller;
         [SerializeField] private Image borderImage;
 
         public void OnPointerClick(PointerEventData eventData)
