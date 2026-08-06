@@ -4,15 +4,22 @@ using UnityEngine;
 namespace GmtkCountdown
 {
     /// <summary>
-    /// Main menu screen shown at game start. Freezes gameplay via Time.timeScale until
-    /// the player presses Play, and keeps all gameplay UI hidden until then.
+    /// Main menu screen shown at game start. Freezes gameplay via Time.timeScale until the
+    /// player presses Play, and covers the screen with its own panel while it is up.
+    /// <para>
+    /// It deliberately does not touch the gameplay UI groups: GameplayController is their single
+    /// owner and drives them from state transitions. This class used to keep a second copy of
+    /// that list and switch it off in Awake, but the switch-off never had any visible effect —
+    /// GameManager fires the first Countdown from Start(), and GameplayController turns the
+    /// groups back on before anything is ever drawn. What actually hides gameplay behind this
+    /// screen is the menu panel itself, raised to the top of the canvas below.
+    /// </para>
     /// </summary>
     public class MainMenuUI : MonoBehaviour
     {
         [SerializeField] private GameObject menuPanelRoot;
         [SerializeField] private Animator menuAnimator;
         [SerializeField] private TMP_Text titleText;
-        [SerializeField] private GameObject[] gameplayUIRoots;
         [SerializeField] private Animator[] animatorsToKeepRunning;
 
         private void Awake()
@@ -32,8 +39,6 @@ namespace GmtkCountdown
             }
 
             SetAnimatorsToKeepRunningUpdateMode(AnimatorUpdateMode.UnscaledTime);
-
-            SetGameplayUIRootsActive(false);
         }
 
         public void OnPlayClicked()
@@ -51,8 +56,6 @@ namespace GmtkCountdown
             {
                 menuPanelRoot.SetActive(false);
             }
-
-            SetGameplayUIRootsActive(true);
         }
 
         private void SetAnimatorsToKeepRunningUpdateMode(AnimatorUpdateMode updateMode)
@@ -67,22 +70,6 @@ namespace GmtkCountdown
                 if (animator != null)
                 {
                     animator.updateMode = updateMode;
-                }
-            }
-        }
-
-        private void SetGameplayUIRootsActive(bool active)
-        {
-            if (gameplayUIRoots == null)
-            {
-                return;
-            }
-
-            foreach (GameObject root in gameplayUIRoots)
-            {
-                if (root != null)
-                {
-                    root.SetActive(active);
                 }
             }
         }

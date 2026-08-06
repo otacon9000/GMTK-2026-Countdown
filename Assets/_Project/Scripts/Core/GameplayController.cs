@@ -36,10 +36,11 @@ namespace GmtkCountdown
 
         private const int TaskChoiceCount = 3;
 
-        // One entry per hand position, all starting empty. HandCapacity is the single source of
-        // truth for how big the hand is: the cardSlots array is only the view onto it, and may
-        // legitimately have a different length if the scene is mid-edit.
-        private readonly List<FragmentData> hand = new List<FragmentData>(new FragmentData[HandCapacity]);
+        // HandCapacity is the single source of truth for how big the hand is: the cardSlots array
+        // is only the view onto it, and may legitimately have a different length if the scene is
+        // mid-edit. Every rule about what is in the hand lives in Hand; this class only decides
+        // when those rules may run and what they cost.
+        private readonly Hand hand = new Hand(HandCapacity);
         private List<TaskData> currentTaskChoices = new List<TaskData>();
 
         // True right before a Countdown state that should get a free full refill:
@@ -86,17 +87,14 @@ namespace GmtkCountdown
 
         private bool HasPlayableFragmentInHand()
         {
-            foreach (FragmentData fragment in hand)
-            {
-                if (fragment != null)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return hand.HasAnyFragment;
         }
 
+        /// <summary>
+        /// Switches the gameplay UI groups on or off. This class is their single owner — no other
+        /// component may touch <see cref="gameplayUIRoots"/>, so that "when is gameplay UI visible"
+        /// has exactly one answer, driven by state transitions.
+        /// </summary>
         private void SetGameplayUIRootsActive(bool active)
         {
             if (gameplayUIRoots == null)
@@ -148,8 +146,9 @@ namespace GmtkCountdown
 
                 if (freeRefillPending)
                 {
-                    RefillHandFree();
+                    hand.RefillEmptySlots(deckManager);
                     freeRefillPending = false;
+                    RefreshHandSlots();
                 }
 
                 if (promptText != null)
@@ -157,6 +156,10 @@ namespace GmtkCountdown
                     promptText.text = string.Empty;
                 }
 
+                // Order matters here: breakChoicePanel is also an entry of gameplayUIRoots, so the
+                // call above has just switched it back on and this is what puts it away again.
+                // Moving this before SetGameplayUIRootsActive(true) would leave the Break panel
+                // up for the whole Countdown.
                 if (breakChoicePanel != null)
                 {
                     breakChoicePanel.SetActive(false);
@@ -214,6 +217,10 @@ namespace GmtkCountdown
                     }
                 }
             }
+
+            // Last, so it sees the visibility the branches above have just applied: entering
+            // Countdown re-enables the whole gameplayUIRoots group, redraw button included.
+            RefreshRedrawButton();
         }
 
         private void Update()
@@ -237,23 +244,48 @@ namespace GmtkCountdown
                     HandleBreakInput();
                     break;
             }
-
-            RefreshHandUI();
         }
 
+        /// <summary>
+        /// Repaints everything that depends on the hand. Call right after any mutation of
+        /// <see cref="hand"/>; nothing polls for these changes.
+        /// </summary>
         private void RefreshHandUI()
         {
-            if (cardSlots != null)
+            RefreshHandSlots();
+            RefreshRedrawButton();
+        }
+
+        /// <summary>
+        /// Repaints the card slots. They show the hand and nothing else, so the hand changing is
+        /// the only thing that can make them stale.
+        /// </summary>
+        private void RefreshHandSlots()
+        {
+            if (cardSlots == null)
             {
-                for (int i = 0; i < cardSlots.Length; i++)
-                {
-                    if (cardSlots[i] != null)
-                    {
-                        cardSlots[i].RefreshDisplay(GetHandSlot(i));
-                    }
-                }
+                return;
             }
 
+            for (int i = 0; i < cardSlots.Length; i++)
+            {
+                if (cardSlots[i] != null)
+                {
+                    cardSlots[i].RefreshDisplay(GetHandSlot(i));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Re-evaluates whether the redraw button should be on screen. Unlike the card slots this
+        /// depends on three things — the current state, a free slot in hand, and fragments left in
+        /// the deck — so it is refreshed both after a hand mutation and at the end of every state
+        /// transition. The state transition case is not optional: the button's GameObject is one
+        /// of the gameplayUIRoots, so entering Countdown switches it back on wholesale and this is
+        /// what puts it away again when a redraw isn't actually possible.
+        /// </summary>
+        private void RefreshRedrawButton()
+        {
             if (redrawButton != null)
             {
                 redrawButton.RefreshVisibility();
@@ -319,35 +351,17 @@ namespace GmtkCountdown
                 return;
             }
 
-            if (index < 0 || index >= hand.Count)
+            FragmentData discarded = hand.Discard(index);
+            if (discarded == null)
             {
                 return;
             }
 
-            if (hand[index] == null)
-            {
-                return;
-            }
-
-            int filledSlots = 0;
-            foreach (FragmentData fragment in hand)
-            {
-                if (fragment != null)
-                {
-                    filledSlots++;
-                }
-            }
-
-            if (filledSlots <= 1)
-            {
-                // Discarding the last card in hand would soft-lock the next Interruption; block it.
-                return;
-            }
+            RefreshHandUI();
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[GameplayController] Discarded '{hand[index].Text}' from slot {index + 1}");
+            Debug.Log($"[GameplayController] Discarded '{discarded.Text}' from slot {index + 1}");
 #endif
-            hand[index] = null;
         }
 
         public void TryRedraw()
@@ -357,23 +371,19 @@ namespace GmtkCountdown
                 return;
             }
 
-            int emptyIndex = hand.FindIndex(fragment => fragment == null);
-            if (emptyIndex < 0 || deckManager.IsEmpty)
+            // Charge only once a fragment has actually landed: a -1 means the deck was never
+            // touched, and the player must not pay countdown seconds for a draw that failed.
+            int filledSlot = hand.TryDrawIntoEmptySlot(deckManager);
+            if (filledSlot < 0)
             {
                 return;
             }
 
-            List<FragmentData> drawn = deckManager.DrawFragments(1);
-            if (drawn.Count == 0)
-            {
-                return;
-            }
-
-            hand[emptyIndex] = drawn[0];
             countdownController.ConsumeTime(RedrawCost);
+            RefreshHandUI();
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[GameplayController] Redrew '{drawn[0].Text}' into slot {emptyIndex + 1} (-{RedrawCost}s)");
+            Debug.Log($"[GameplayController] Redrew '{hand.GetSlot(filledSlot).Text}' into slot {filledSlot + 1} (-{RedrawCost}s)");
 #endif
         }
 
@@ -384,18 +394,14 @@ namespace GmtkCountdown
                 return;
             }
 
-            if (index < 0 || index >= hand.Count)
-            {
-                return;
-            }
-
-            FragmentData fragment = hand[index];
+            FragmentData fragment = hand.Play(index);
             if (fragment == null)
             {
                 return;
             }
 
-            hand[index] = null;
+            RefreshHandUI();
+
             int earnedTime = taskManager.PlayFragment(fragment);
 
             if (countdownController != null)
@@ -437,7 +443,7 @@ namespace GmtkCountdown
 
         public bool HasEmptySlot()
         {
-            return hand.FindIndex(fragment => fragment == null) >= 0;
+            return hand.HasEmptySlot;
         }
 
         public bool CanRedraw()
@@ -447,41 +453,7 @@ namespace GmtkCountdown
 
         public FragmentData GetHandSlot(int index)
         {
-            if (index < 0 || index >= hand.Count)
-            {
-                return null;
-            }
-
-            return hand[index];
-        }
-
-        private void RefillHandFree()
-        {
-            int emptySlots = 0;
-            foreach (FragmentData fragment in hand)
-            {
-                if (fragment == null)
-                {
-                    emptySlots++;
-                }
-            }
-
-            if (emptySlots <= 0)
-            {
-                return;
-            }
-
-            List<FragmentData> drawn = deckManager.DrawFragments(emptySlots);
-
-            int drawnIndex = 0;
-            for (int i = 0; i < hand.Count && drawnIndex < drawn.Count; i++)
-            {
-                if (hand[i] == null)
-                {
-                    hand[i] = drawn[drawnIndex];
-                    drawnIndex++;
-                }
-            }
+            return hand.GetSlot(index);
         }
     }
 }
