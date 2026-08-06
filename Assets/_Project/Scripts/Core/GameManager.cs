@@ -50,6 +50,20 @@ namespace GmtkCountdown
         /// </summary>
         public GameState CurrentState => currentState;
 
+        /// <summary>
+        /// Clears the static state before every play session. With "Enter Play Mode Options" set
+        /// to skip the domain reload — the usual way to speed up iteration in Unity 6 — statics
+        /// keep their values from the previous session, so <see cref="Instance"/> would still
+        /// point at a destroyed object and <see cref="OnStateChanged"/> would still hold handlers
+        /// belonging to it. Both are reset here rather than relying on the reload happening.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            Instance = null;
+            OnStateChanged = null;
+        }
+
         private void Awake()
         {
             // Single-scene jam scope: enforce one instance, no DontDestroyOnLoad.

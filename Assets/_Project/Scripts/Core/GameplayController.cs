@@ -30,7 +30,16 @@ namespace GmtkCountdown
         [SerializeField] private GameOverPanelUI gameOverPanel;
         [SerializeField] private GameObject gameOverPanelRoot;
         [SerializeField] private GameObject[] gameplayUIRoots;
+        // Unassigned in scn_office, and has been for as long as the scene has existed: the branch
+        // that switches it on at Interruption has therefore never done anything. Either wire it or
+        // drop the field — that is a design call about whether the hand area is meant to be hidden
+        // outside Interruptions, not a cleanup.
         [SerializeField] private GameObject cardHandAreaRoot;
+
+        // Careful: this is NOT the object called "PromptArea". In scn_office it points at
+        // "PromptBackground", while "PromptArea" is an entry of gameplayUIRoots below. Two names
+        // one word apart, two different objects, two different lifetimes — the field name is the
+        // misleading one, and renaming it means re-wiring the scene.
         [SerializeField] private GameObject promptAreaRoot;
 
         private const int TaskChoiceCount = 3;
@@ -315,6 +324,10 @@ namespace GmtkCountdown
             }
         }
 
+        // The three input handlers below map slot/choice N onto KeyCode.Alpha1 + N. That works only
+        // while the counts stay in single digits: past 9 the arithmetic walks off the number row
+        // into unrelated KeyCodes. HandCapacity and TaskChoiceCount therefore have an undeclared
+        // ceiling of 9, which is worth remembering if the hand is ever resized.
         private void HandleBreakInput()
         {
             for (int i = 0; i < TaskChoiceCount; i++)

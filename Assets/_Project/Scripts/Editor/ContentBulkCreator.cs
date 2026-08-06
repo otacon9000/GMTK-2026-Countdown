@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +8,17 @@ namespace GmtkCountdown.Editor
     {
         private const string PromptsFolder = "Assets/_Project/ScriptableObjects/Prompts";
         private const string FragmentsFolder = "Assets/_Project/ScriptableObjects/Fragments";
+        private const string BossLinesFolder = "Assets/_Project/ScriptableObjects/BossLines";
         private const int MaxNameLength = 40;
+
+        // The three lines that used to be hardcoded in BossSpeechUI, moved here so they survive
+        // as authored content instead of living in a component's default array.
+        private static readonly string[] BossLinesToCreate =
+        {
+            "Are you done yet?",
+            "Well?",
+            "I'm waiting.",
+        };
 
         private static readonly string[] PromptsToCreate =
         {
@@ -115,7 +124,7 @@ namespace GmtkCountdown.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            LogSummary("PromptData", PromptsFolder, createdPaths, skippedPaths);
+            BulkCreatorUtility.LogSummary("ContentBulkCreator", "PromptData", PromptsFolder, createdPaths, skippedPaths);
         }
 
         [MenuItem("Tools/GMTK Countdown/Generate Fragment Data Batch")]
@@ -152,23 +161,42 @@ namespace GmtkCountdown.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            LogSummary("FragmentData", FragmentsFolder, createdPaths, skippedPaths);
+            BulkCreatorUtility.LogSummary("ContentBulkCreator", "FragmentData", FragmentsFolder, createdPaths, skippedPaths);
         }
 
-        private static void LogSummary(string assetTypeName, string folder, List<string> createdPaths, List<string> skippedPaths)
+        [MenuItem("Tools/GMTK Countdown/Generate Boss Line Batch")]
+        private static void GenerateBossLineBatch()
         {
-            var summary = new StringBuilder();
-            summary.AppendLine($"ContentBulkCreator: created {createdPaths.Count} {assetTypeName} asset(s) in {folder}.");
-            if (skippedPaths.Count > 0)
+            BulkCreatorUtility.EnsureFolder("Assets/_Project/ScriptableObjects", "BossLines");
+
+            var createdPaths = new List<string>();
+            var skippedPaths = new List<string>();
+            var pathsUsedThisRun = new HashSet<string>();
+
+            foreach (string lineText in BossLinesToCreate)
             {
-                summary.AppendLine($"Skipped {skippedPaths.Count} already-existing asset(s):");
-                foreach (string skipped in skippedPaths)
+                string baseFileName = "BossLine_" + BulkCreatorUtility.SanitizeName(lineText, MaxNameLength);
+                string assetPath = BulkCreatorUtility.ResolveUniquePath(BossLinesFolder, baseFileName, pathsUsedThisRun);
+
+                if (AssetDatabase.LoadAssetAtPath<BossLineData>(assetPath) != null)
                 {
-                    summary.AppendLine($"  - {skipped}");
+                    skippedPaths.Add(assetPath);
+                    continue;
                 }
+
+                var bossLineData = ScriptableObject.CreateInstance<BossLineData>();
+                var serializedObject = new SerializedObject(bossLineData);
+                serializedObject.FindProperty("lineText").stringValue = lineText;
+                serializedObject.ApplyModifiedProperties();
+
+                AssetDatabase.CreateAsset(bossLineData, assetPath);
+                createdPaths.Add(assetPath);
             }
 
-            Debug.Log(summary.ToString());
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            BulkCreatorUtility.LogSummary("ContentBulkCreator", "BossLineData", BossLinesFolder, createdPaths, skippedPaths);
         }
     }
 }

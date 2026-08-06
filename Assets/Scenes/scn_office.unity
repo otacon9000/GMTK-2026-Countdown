@@ -15073,9 +15073,6 @@ MonoBehaviour:
   menuPanelRoot: {fileID: 1454696394}
   menuAnimator: {fileID: 0}
   titleText: {fileID: 1701505464}
-  gameplayUIRoots:
-  - {fileID: 2084480258}
-  - {fileID: 1973007334}
   animatorsToKeepRunning:
   - {fileID: 407838403}
   - {fileID: 48205260}
@@ -18674,6 +18671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 920109f7f05564b1297b5f526cf413db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GmtkCountdown.GameManager
+  gameplayController: {fileID: 1956504556}
 --- !u!4 &1956504558
 Transform:
   m_ObjectHideFlags: 0
@@ -18704,9 +18702,9 @@ MonoBehaviour:
   speechText: {fileID: 713918207}
   speechAreaRoot: {fileID: 1412626414}
   bossLines:
-  - Are you done yet?
-  - Well?
-  - I'm waiting.
+  - {fileID: 11400000, guid: 80c21519057dd46819ad6d0d6c82bfec, type: 2}
+  - {fileID: 11400000, guid: 89ee8dbc25572448ba978f0410606c96, type: 2}
+  - {fileID: 11400000, guid: 6d9b5418b37c84728886f80810ea437b, type: 2}
 --- !u!1 &1957507536
 GameObject:
   m_ObjectHideFlags: 0

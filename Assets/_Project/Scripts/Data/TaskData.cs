@@ -25,5 +25,25 @@ namespace GmtkCountdown
 
         /// <summary>Points awarded on completion of this task.</summary>
         public int ScoreValue => scoreValue;
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (string.IsNullOrWhiteSpace(taskName))
+            {
+                Debug.LogWarning($"[TaskData] '{name}' has no name: the Break screen would offer a blank option.", this);
+            }
+
+            if (requiredTime <= 0)
+            {
+                Debug.LogWarning($"[TaskData] '{name}' requires {requiredTime}s: it would complete on the first fragment played.", this);
+            }
+
+            if (scoreValue < 0)
+            {
+                Debug.LogWarning($"[TaskData] '{name}' awards {scoreValue} points: completing it would lower the run's score.", this);
+            }
+        }
+#endif
     }
 }

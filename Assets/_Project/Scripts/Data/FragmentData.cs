@@ -37,5 +37,20 @@ namespace GmtkCountdown
         /// gets is usually lower than this authored value.
         /// </summary>
         public int BaseEarnedTime => baseEarnedTime;
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (string.IsNullOrWhiteSpace(fragmentText))
+            {
+                Debug.LogWarning($"[FragmentData] '{name}' has no text: it would show as a blank card.", this);
+            }
+
+            if (baseEarnedTime <= 0)
+            {
+                Debug.LogWarning($"[FragmentData] '{name}' earns {baseEarnedTime}s: a fragment worth nothing is playable but pointless.", this);
+            }
+        }
+#endif
     }
 }
